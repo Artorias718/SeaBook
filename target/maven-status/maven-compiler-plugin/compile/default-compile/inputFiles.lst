@@ -1,0 +1,9 @@
+/home/artorias/Desktop/Seabook/src/main/java/com/javasampleapproach/springrest/postgresql/SpringRestPostgreSqlApplication.java
+/home/artorias/Desktop/Seabook/src/main/java/com/javasampleapproach/springrest/postgresql/model/Stabilimento.java
+/home/artorias/Desktop/Seabook/src/main/java/com/javasampleapproach/springrest/postgresql/controller/CustomerController.java
+/home/artorias/Desktop/Seabook/src/main/java/com/javasampleapproach/springrest/postgresql/controller/StabilimentoController.java
+/home/artorias/Desktop/Seabook/src/main/java/com/javasampleapproach/springrest/postgresql/configs/SecurityConfiguration.java
+/home/artorias/Desktop/Seabook/src/main/java/com/javasampleapproach/springrest/postgresql/repo/StabilimentoRepository.java
+/home/artorias/Desktop/Seabook/src/main/java/com/javasampleapproach/springrest/postgresql/repo/CustomerRepository.java
+/home/artorias/Desktop/Seabook/src/main/java/com/javasampleapproach/springrest/postgresql/controller/LoginController.java
+/home/artorias/Desktop/Seabook/src/main/java/com/javasampleapproach/springrest/postgresql/model/Customer.java
