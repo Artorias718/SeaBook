@@ -1,6 +1,8 @@
 package com.javasampleapproach.springrest.postgresql.model;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "stabilimento")

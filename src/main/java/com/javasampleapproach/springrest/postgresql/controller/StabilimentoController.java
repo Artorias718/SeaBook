@@ -5,7 +5,9 @@ import java.util.List;
 import java.util.Optional;
 
 import com.javasampleapproach.springrest.postgresql.model.Customer;
+import com.javasampleapproach.springrest.postgresql.model.Posto;
 import com.javasampleapproach.springrest.postgresql.model.Stabilimento;
+import com.javasampleapproach.springrest.postgresql.repo.PostoRepository;
 import com.javasampleapproach.springrest.postgresql.repo.StabilimentoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -31,6 +33,9 @@ public class StabilimentoController {
     @Autowired
     StabilimentoRepository repository;
 
+    @Autowired
+    PostoRepository lista_posti;
+
     @GetMapping("/stabilimenti")
     public List<Stabilimento> getAllStabilimenti() {
 
@@ -46,5 +51,25 @@ public class StabilimentoController {
         Stabilimento _stabilimento = repository.save(new Stabilimento(stabilimento.getName(), stabilimento.getNumeroPosti()));
         return _stabilimento;
     }
+
+    /*@PostMapping(value = "/stabilimenti/{id}/addPosto")
+    public void postPostoInStabilimento(@RequestBody Posto posto, @PathVariable("id") long id) {
+
+        //manca dire a quale stabilimento, tramite l'id
+        Posto _posto = lista_posti.save(new Posto());
+    }*/
+
+    @GetMapping("/stabilimenti/{sid}/listaPosti")
+    public List<Posto> getAllPosti(@PathVariable long sid) {
+
+        //questa mi servirà da altre parti per accedere al singolo stabilimento
+        //Stabilimento x = repository.findById(id);
+
+        List<Posto> posticini = new ArrayList<>();
+        lista_posti.findAllBySid(sid).forEach(posticini::add);
+
+        return posticini;
+    }
+
 
 }
