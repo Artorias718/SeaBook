@@ -8,6 +8,7 @@ import java.util.List;
 public interface SpotRepository extends CrudRepository<Spot, Long> {
 
     List<Spot> findAllBySid(long sid);
+    void deleteAllBySid(long sid);
 
 
 

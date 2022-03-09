@@ -2,19 +2,14 @@ package com.javasampleapproach.springrest.postgresql.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
-import com.javasampleapproach.springrest.postgresql.model.Spot;
 import com.javasampleapproach.springrest.postgresql.model.Stabilimento;
-import com.javasampleapproach.springrest.postgresql.repo.SpotRepository;
 import com.javasampleapproach.springrest.postgresql.repo.StabilimentoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
@@ -40,15 +35,45 @@ public class StabilimentoController {
         return newstab;
     }
 
-    //TODO
+    @GetMapping("/stabilimenti/{id}")
+    public Optional<Stabilimento> getStabilimento(@PathVariable long id){
 
-    //@GetMapping("/stabilimenti/{sid}")    prende uno specifico stabilimento
+        return repository.findById(id);
+    }
 
-    //@PutMapping("/stabilimenti/{sid}/put") modifica uno stabilimento
+    @DeleteMapping("/stabilimenti/{id}/delete")
+    public ResponseEntity<String> deleteStabilimento(@PathVariable("id") long id) {
 
-    //@DeleteMapping("/stabilimenti/delete)  cancella tutti gli stabilimenti
+        repository.deleteById(id);
 
-    //@DeleteMapping("/stabilimenti/{sid}/delete/") cancello uno stabiliemento specifico
+        return new ResponseEntity<>("Stab has been deleted!", HttpStatus.OK);
+    }
+
+    @DeleteMapping("/stabilimenti/delete")
+    public ResponseEntity<String> deleteAllStabilimenti() {
+
+        repository.deleteAll();
+
+        return new ResponseEntity<>("All stabilimenti have been deleted!", HttpStatus.OK);
+    }
+
+    @PutMapping("/stabilimenti/{id}/put")
+    public ResponseEntity<Stabilimento> updateStabilimento(@PathVariable("id") long id, @RequestBody Stabilimento stabilimento) {
+
+        Optional<Stabilimento> stabData = repository.findById(id);
+
+        if (stabData.isPresent()) {
+            Stabilimento _stab = stabData.get();
+            _stab.setName(stabilimento.getName());
+            _stab.setSpotsNumber(stabilimento.getSpotsNumber());
+            _stab.setAddress(stabilimento.getAddress());
+            _stab.setPhoneNumber(stabilimento.getPhoneNumber());
+            return new ResponseEntity<>(repository.save(_stab), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
 
 
 

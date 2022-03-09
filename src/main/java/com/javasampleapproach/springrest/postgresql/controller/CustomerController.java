@@ -62,6 +62,7 @@ public class CustomerController {
 
 		return new ResponseEntity<>("All customers have been deleted!", HttpStatus.OK);
 	}
+
 	@GetMapping(value = "customers/age/{age}")
 	public List<Customer> findByAge(@PathVariable int age) {
 

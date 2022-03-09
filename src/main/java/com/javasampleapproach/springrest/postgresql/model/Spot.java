@@ -32,10 +32,10 @@ public class Spot {
         this.sid = sid;
     }
 
-    public boolean getIsBooked() {
+    public boolean IsBooked() {
         return isBooked;
     }
-    public void setIsBooked(boolean isBooked) {
+    public void IsBooked(boolean isBooked) {
         this.isBooked = isBooked;
     }
 

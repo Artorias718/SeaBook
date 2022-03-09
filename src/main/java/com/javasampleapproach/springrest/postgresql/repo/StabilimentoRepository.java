@@ -9,7 +9,5 @@ import com.javasampleapproach.springrest.postgresql.model.Customer;
 
 public interface StabilimentoRepository extends CrudRepository<Stabilimento, Long> {
 
-    Stabilimento findById(long Id);
-
 }
 
