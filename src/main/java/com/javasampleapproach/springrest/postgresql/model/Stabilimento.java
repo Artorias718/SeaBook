@@ -1,8 +1,6 @@
 package com.javasampleapproach.springrest.postgresql.model;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Table(name = "stabilimento")
@@ -15,20 +13,21 @@ public class Stabilimento {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "posti")
-    private int posti;
+    @Column(name = "capacity")
+    private int capacity;
 
-    //costruttori
-    public Stabilimento() {
-    }
-    public Stabilimento(String name, int posti ) {
-        this.name = name;
-        this.posti = posti;
-    }
+    @Column(name = "address")
+    private String address;
+
+    @Column(name ="phoneNumber")
+    private String phoneNumber;
 
 
-    public long getId() {
+    public Long getId() {
         return id;
+    }
+    public void setId(Long idd) {
+        this.id = idd;
     }
 
     public void setName(String name) {this.name = name;}
@@ -36,8 +35,34 @@ public class Stabilimento {
         return this.name;
     }
 
-    public void setNumeroPosti(int posti) {this.posti = posti;}
-    public Integer getNumeroPosti() {return this.posti;} //NOTA: il nome del metodo è il norme del parametro nelle richieste (postaman e non) con l'iniziale minuscola
+    public void setSpotsNumber(int capacity) {this.capacity = capacity;}
+    public Integer getSpotsNumber() {return this.capacity;} //NOTA: il nome del metodo è il norme del parametro nelle richieste (postaman e non) con l'iniziale minuscola
+
+    public String getAddress() {
+        return address;
+    }
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public Stabilimento() {
+    }
+
+    public Stabilimento(String name, int capacity, String address, String phoneNumber) {
+        this.name = name;
+        this.capacity = capacity;
+        this.address = address;
+        this.phoneNumber = phoneNumber;
+    }
+
+
 }
 
 
