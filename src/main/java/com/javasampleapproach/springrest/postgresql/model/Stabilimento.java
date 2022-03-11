@@ -36,7 +36,7 @@ public class Stabilimento {
     }
 
     public void setSpotsNumber(int capacity) {this.capacity = capacity;}
-    public Integer getSpotsNumber() {return this.capacity;} //NOTA: il nome del metodo è il norme del parametro nelle richieste (postaman e non) con l'iniziale minuscola
+    public int getSpotsNumber() {return this.capacity;} //NOTA: il nome del metodo è il nome del parametro nelle richieste (postaman e non) con l'iniziale minuscola
 
     public String getAddress() {
         return address;

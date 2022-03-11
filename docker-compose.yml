@@ -12,12 +12,12 @@ services:
       POSTGRES_DB: testdb
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin
-      restart: unless-stopped
+      restart: u  nless-stopped
   app: #servizio2, il nostro container, quello che abbiamo creato nel dockerfile, il backend
     build: .
     image: appbootrest #nome del jat che verrà mandato in esecuzione, deve coincidere con quello nel dockerfile
     container_name: seabook
     ports:
-      - "8088:8088"
+      - "8080:8080"
     depends_on:
       - dbpostgresql

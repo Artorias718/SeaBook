@@ -1,12 +1,12 @@
 /home/artorias/SeaBook/src/main/java/com/javasampleapproach/springrest/postgresql/model/Customer.java
-/home/artorias/SeaBook/src/main/java/com/javasampleapproach/springrest/postgresql/controller/PostoController.java
+/home/artorias/SeaBook/src/main/java/com/javasampleapproach/springrest/postgresql/controller/SpotController.java
 /home/artorias/SeaBook/src/main/java/com/javasampleapproach/springrest/postgresql/SpringRestPostgreSqlApplication.java
 /home/artorias/SeaBook/src/main/java/com/javasampleapproach/springrest/postgresql/controller/LoginController.java
-/home/artorias/SeaBook/src/main/java/com/javasampleapproach/springrest/postgresql/model/Posto.java
 /home/artorias/SeaBook/src/main/java/com/javasampleapproach/springrest/postgresql/controller/StabilimentoController.java
 /home/artorias/SeaBook/src/main/java/com/javasampleapproach/springrest/postgresql/repo/StabilimentoRepository.java
+/home/artorias/SeaBook/src/main/java/com/javasampleapproach/springrest/postgresql/repo/SpotRepository.java
 /home/artorias/SeaBook/src/main/java/com/javasampleapproach/springrest/postgresql/repo/CustomerRepository.java
 /home/artorias/SeaBook/src/main/java/com/javasampleapproach/springrest/postgresql/controller/CustomerController.java
+/home/artorias/SeaBook/src/main/java/com/javasampleapproach/springrest/postgresql/model/Spot.java
 /home/artorias/SeaBook/src/main/java/com/javasampleapproach/springrest/postgresql/configs/SecurityConfiguration.java
 /home/artorias/SeaBook/src/main/java/com/javasampleapproach/springrest/postgresql/model/Stabilimento.java
-/home/artorias/SeaBook/src/main/java/com/javasampleapproach/springrest/postgresql/repo/PostoRepository.java
