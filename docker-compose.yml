@@ -18,6 +18,6 @@ services:
     image: appbootrest #nome del jat che verrà mandato in esecuzione, deve coincidere con quello nel dockerfile
     container_name: seabook
     ports:
-      - "8088:8088"
+      - "8080:8080"
     depends_on:
       - dbpostgresql
