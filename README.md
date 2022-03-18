@@ -22,7 +22,16 @@ ps -ef|grep postgres
 
 sudo kill -9 <numero nella seconda colonna>
 ```
+Per pulire i dati nel postgres in docker usare 
 
+```bash
+docker-compose down 
+```
+
+Per attivare la persistenza dei dati nel postgres locale impostare nell application.properties
+```bash
+spring.jpa.hibernate.ddl-auto = update 
+```
 
 
 

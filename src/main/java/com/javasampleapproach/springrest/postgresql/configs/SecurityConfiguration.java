@@ -14,16 +14,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 
         httpSecurity
                 .antMatcher("/**").authorizeRequests()
-                .antMatchers("/").permitAll();
-//                .anyRequest().authenticated()
-//                .and()
-//                .oauth2Login();
-
-//        httpSecurity
-//                .authorizeRequests().antMatchers("/**")
-//                .permitAll().anyRequest().anonymous();//<< this will allow any resource endpoint access when the HTTP
-        // request Authorization header not available
-        //http.authorizeRequests().antMatchers("/**").permitAll();<< also can
-
+                .antMatchers("/").permitAll()
+                .anyRequest().authenticated()
+                .and()
+                .oauth2Login();
     }
 }*/
