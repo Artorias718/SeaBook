@@ -1,4 +1,4 @@
-package com.javasampleapproach.springrest.postgresql.configs;
+/*package com.javasampleapproach.springrest.postgresql.configs;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.HttpSecurityBuilder;
@@ -26,4 +26,4 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
         //http.authorizeRequests().antMatchers("/**").permitAll();<< also can
 
     }
-}
+}*/

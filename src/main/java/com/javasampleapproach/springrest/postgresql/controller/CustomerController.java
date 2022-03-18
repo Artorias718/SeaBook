@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.javasampleapproach.springrest.postgresql.model.Customer;
 import com.javasampleapproach.springrest.postgresql.repo.CustomerRepository;
 
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "http://localhost:8010")
 @RestController
 @RequestMapping("/api/v1")
 public class CustomerController {
@@ -38,8 +38,25 @@ public class CustomerController {
 		return customers;
 	}
 
+	@GetMapping(value = "/customers/{id}")
+	public Optional<Customer> findById(@PathVariable("id") long id) {
+		System.out.println("Find customer by id: " + id);
+
+		Optional<Customer> _customer = repository.findById(id);
+
+		if (_customer.isPresent()) {
+			System.out.println("Customer found: " + _customer);
+		}
+		else {
+			System.out.println("Customer not found. " + _customer);
+		}
+
+		return _customer;
+	}
+
 	@PostMapping(value = "/customers/create")
 	public Customer postCustomer(@RequestBody Customer customer) {
+		System.out.println("Create new Customer...");
 
 		Customer _customer = repository.save(new Customer(customer.getName(), customer.getAge()));
 		return _customer;
@@ -65,6 +82,7 @@ public class CustomerController {
 
 	@GetMapping(value = "customers/age/{age}")
 	public List<Customer> findByAge(@PathVariable int age) {
+		System.out.println("Get Customer by age...");
 
 		List<Customer> customers = repository.findByAge(age);
 		return customers;
