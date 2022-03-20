@@ -52,7 +52,7 @@ public class Stabilimento {
         this.phoneNumber = phoneNumber;
     }
 
-    public Stabilimento() {
+    private Stabilimento() {
     }
 
     public Stabilimento(String name, int capacity, String address, String phoneNumber) {
@@ -62,6 +62,16 @@ public class Stabilimento {
         this.phoneNumber = phoneNumber;
     }
 
+    @Override
+    public String toString() {
+        return "Stabilimento{" +
+            "id=" + id +
+            ", name='" + name + '\'' +
+            ", capacity='" + capacity + '\'' +
+            ", address='" + address + '\'' +
+            ", phoneNumber='" + phoneNumber + '\'' +
+            '}';
+    }
 
 }
 

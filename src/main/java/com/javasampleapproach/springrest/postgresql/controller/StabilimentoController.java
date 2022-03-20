@@ -11,7 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "http://localhost:8081")
 @RestController
 @RequestMapping("/api/v1")
 public class StabilimentoController {
@@ -28,10 +28,17 @@ public class StabilimentoController {
         return stabilimenti;
     }
 
+    // questo non potra essere invocato da tutti
     @PostMapping(value = "/stabilimenti/create")
     public Stabilimento postStabilimento(@RequestBody Stabilimento stabilimento) {
 
-        Stabilimento newstab = repository.save(new Stabilimento(stabilimento.getName(), stabilimento.getSpotsNumber(), stabilimento.getAddress(), stabilimento.getPhoneNumber()));
+        Stabilimento newstab = repository.save(
+                new Stabilimento(
+                        stabilimento.getName(),
+                        stabilimento.getSpotsNumber(),
+                        stabilimento.getAddress(),
+                        stabilimento.getPhoneNumber()));
+
         return newstab;
     }
 
@@ -74,26 +81,11 @@ public class StabilimentoController {
         }
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
     /*@PostMapping(value = "/stabilimenti/{id}/addPosto")
     public void postPostoInStabilimento(@RequestBody Spot posto, @PathVariable("id") long id) {
 
         //manca dire a quale stabilimento, tramite l'id
         Spot _posto = lista_posti.save(new Spot());
     }*/
-
-
-
 
 }

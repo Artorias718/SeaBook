@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.javasampleapproach.springrest.postgresql.model.Customer;
 import com.javasampleapproach.springrest.postgresql.repo.CustomerRepository;
 
-@CrossOrigin(origins = "http://localhost:8010")
+@CrossOrigin(origins = "http://localhost:8081")
 @RestController
 @RequestMapping("/api/v1")
 public class CustomerController {
@@ -28,6 +28,7 @@ public class CustomerController {
 	@Autowired
 	CustomerRepository repository;
 
+	@CrossOrigin
 	@GetMapping("/customers")
 	public List<Customer> getAllCustomers() {
 		System.out.println("Get all Customers...");
@@ -44,12 +45,14 @@ public class CustomerController {
 
 		Optional<Customer> _customer = repository.findById(id);
 
+		String pref = "";
 		if (_customer.isPresent()) {
-			System.out.println("Customer found: " + _customer);
+			pref = "Customer found: ";
 		}
 		else {
-			System.out.println("Customer not found. " + _customer);
+			pref = "Customer not found. ";
 		}
+		System.out.println(pref + _customer);
 
 		return _customer;
 	}
