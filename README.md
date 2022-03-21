@@ -32,6 +32,10 @@ Per attivare la persistenza dei dati nel postgres locale impostare nell applicat
 ```bash
 spring.jpa.hibernate.ddl-auto = update 
 ```
+Per comodità dello sviluppo l'autenticazione è temporaneamente disabilitata, per riabilitarla scommentare l'intero file SecurityConfiguration.java e scommentare le dipendenze del pom.xml 
+
+![image](https://user-images.githubusercontent.com/96788765/159331918-65fb3150-8487-45ef-8728-7822e949c282.png)
+
 
 
 
