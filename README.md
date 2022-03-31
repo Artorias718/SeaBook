@@ -36,6 +36,18 @@ Per comodità dello sviluppo l'autenticazione è temporaneamente disabilitata, p
 
 ![image](https://user-images.githubusercontent.com/96788765/159331918-65fb3150-8487-45ef-8728-7822e949c282.png)
 
+Per lanciare kubernates
+```bash
+minikube start 
+```
+```bash
+kubectl apply -f Kubernates
+```
+```bash
+kubectl port-forward svc/app 8080:8080
+```
+
+
 
 
 
