@@ -22,6 +22,15 @@ ps -ef|grep postgres
 
 sudo kill -9 <numero nella seconda colonna>
 ```
+
+>⛔ Attenzione:
+>
+> Il docker-compose.yml prevede il build delle immagini del discovery e dell'apigateway, non ancora presenti in quel progetto
+E' quindi necessario usare docker-compose build nei singoli progetti (partendo da seabook) e successivamente usare solo docker-compose up in seabook
+
+
+
+
 Per pulire i dati nel postgres in docker usare 
 
 ```bash
