@@ -16,6 +16,12 @@ public class Stabilimento {
     @Column(name = "capacity")
     private int capacity;
 
+    @Column(name = "rowQty")
+    private int rowQty;
+
+    @Column(name = "columnQty")
+    private int columnQty;
+
     @Column(name = "address")
     private String address;
 
@@ -55,22 +61,40 @@ public class Stabilimento {
     private Stabilimento() {
     }
 
-    public Stabilimento(String name, int capacity, String address, String phoneNumber) {
+    public Stabilimento(String name, int capacity, int rows, int columns, String address, String phoneNumber) {
         this.name = name;
         this.capacity = capacity;
+        this.rowQty = rows;
+        this.columnQty = columns;
         this.address = address;
         this.phoneNumber = phoneNumber;
     }
 
     @Override
     public String toString() {
-        return "Stabilimento{" +
+        return "{" +
             "id=" + id +
             ", name='" + name + '\'' +
             ", capacity='" + capacity + '\'' +
             ", address='" + address + '\'' +
             ", phoneNumber='" + phoneNumber + '\'' +
             '}';
+    }
+
+    public int getRowQty() {
+        return rowQty;
+    }
+
+    public void setRowQty(int rowQty) {
+        this.rowQty = rowQty;
+    }
+
+    public int getColumnQty() {
+        return columnQty;
+    }
+
+    public void setColumnQty(int columnQty) {
+        this.columnQty = columnQty;
     }
 
 }

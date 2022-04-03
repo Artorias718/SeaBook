@@ -26,8 +26,12 @@ public class SpotController {
         //questa mi servirà da altre parti per accedere al singolo stabilimento
         //Stabilimento x = repository.findById(id);
 
+        System.out.println("Get spots for stabilimentoId: " + sid);
+
         List<Spot> posti = new ArrayList<>();
         repository.findAllBySid(sid).forEach(posti::add);
+
+        System.out.println(posti);
 
         return posti;
     }
@@ -63,7 +67,7 @@ public class SpotController {
 
         if (spotData.isPresent()) {
             Spot _spot = spotData.get();
-            _spot.IsBooked(spot.IsBooked());
+            _spot.setBooked(spot.isBooked());
             _spot.setPrice(spot.getPrice());
             _spot.setStabId(spot.getStabId());
             return new ResponseEntity<>(repository.save(_spot), HttpStatus.OK);

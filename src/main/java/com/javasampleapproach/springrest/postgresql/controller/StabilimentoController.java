@@ -29,18 +29,18 @@ public class StabilimentoController {
     }
 
     // questo non potra essere invocato da tutti
-    @PostMapping(value = "/stabilimenti/create")
-    public Stabilimento postStabilimento(@RequestBody Stabilimento stabilimento) {
-
-        Stabilimento newstab = repository.save(
-                new Stabilimento(
-                        stabilimento.getName(),
-                        stabilimento.getSpotsNumber(),
-                        stabilimento.getAddress(),
-                        stabilimento.getPhoneNumber()));
-
-        return newstab;
-    }
+//    @PostMapping(value = "/stabilimenti/create")
+//    public Stabilimento postStabilimento(@RequestBody Stabilimento stabilimento) {
+//
+//        Stabilimento newstab = repository.save(
+//                new Stabilimento(
+//                        stabilimento.getName(),
+//                        stabilimento.getSpotsNumber(),
+//                        stabilimento.getAddress(),
+//                        stabilimento.getPhoneNumber()));
+//
+//        return newstab;
+//    }
 
     @GetMapping("/stabilimenti/{id}")
     public Optional<Stabilimento> getStabilimento(@PathVariable long id){
@@ -80,6 +80,8 @@ public class StabilimentoController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+//    public List<Stabilimento> search()
 
     /*@PostMapping(value = "/stabilimenti/{id}/addPosto")
     public void postPostoInStabilimento(@RequestBody Spot posto, @PathVariable("id") long id) {
