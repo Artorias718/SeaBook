@@ -4,11 +4,10 @@
 version: '3'
 
 services:
+
   discovery:
     build: .
     image: discovery
-    environment:
-      eureka.client.serviceUrl.defaultZone: http://discovery:8761/eureka/
     ports:
       - "8761:8761"
 
@@ -39,7 +38,7 @@ services:
     image: appbootrest #nome del jar che verrà mandato in esecuzione, deve coincidere con quello nel dockerfile
     environment:
       eureka.client.serviceUrl.defaultZone: http://discovery:8761/eureka/
-    container_name: seabook
+    container_name: appbootrest
     ports:
       - "8080:8080"
     depends_on: #alias links, uno dei due è in deprecazione

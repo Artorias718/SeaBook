@@ -32,7 +32,7 @@ spec:
             - name: POSTGRES_USER
               value: admin
             - name: restart
-              value: u  nless-stopped
+              value: unless-stopped
           image: postgres
           name: dbpostgresql
           ports:
