@@ -24,7 +24,7 @@ public class DatabaseLoader implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         this.stabRepo.save(new Stabilimento("Bagni Liguria",
-                15, 3, 5,
+                12, 3, 4,
                 "Viale Rimembranza, 38, 16039 Sestri Levante GE",
                 "0185 482131"));
         this.stabRepo.save(new Stabilimento("Bagni Castelletto",
@@ -32,7 +32,7 @@ public class DatabaseLoader implements CommandLineRunner {
                 "Via Aurelia, 17024 Finale Ligure SV",
                 "019 600106"));
         this.stabRepo.save(new Stabilimento("Capo Torre Beach & Lounge",
-                20, 5, 4,
+                15, 5, 3,
                 "Via Aurelia di Ponente, 1, 17015 Celle Ligure SV",
                 "019 221 6264"));
         this.stabRepo.save(new Stabilimento("Bagni Vittoria Beach",
@@ -65,7 +65,7 @@ public class DatabaseLoader implements CommandLineRunner {
                 System.out.println(columnQty + " " + rowDiscount);
                 for (int j = 0; j < columnQty; j++) {
                     // e' il repository che crea l'id, quindi se creo l'obj separato da repository.save non ho l'id
-                    Spot spot = spotRepo.save(new Spot(stab.getId(), (basePrice - rowDiscount), i, j));
+                    Spot spot = spotRepo.save(new Spot(stab.getId(), j % 2 == 0, (basePrice - rowDiscount), true, i, j));
                     System.out.println(spot);
                 }
                 System.out.println();

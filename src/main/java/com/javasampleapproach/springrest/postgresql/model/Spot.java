@@ -73,6 +73,15 @@ public class Spot {
         this.column = column;
     }
 
+    public Spot(long sid, boolean isBooked, double price, boolean isActive, int row, int column) {
+        this.sid = sid;
+        this.isBooked = isBooked;
+        this.price = price;
+        this.isActive = isActive;
+        this.row = row;
+        this.column = column;
+    }
+
     public boolean isActive() {
         return isActive;
     }
