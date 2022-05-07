@@ -5,11 +5,12 @@ Se non già installato, installre maven wrapper plugin, posizionandosi nella roo
 ```bash
 mvn -N io.takari:maven:wrapper
 ```
-costruire il package 
-```bash
+⚡ Per runnare tutto il progetto, posizionarsi in ogni servizio partendo dal discovery, costruire il package
+ 
+```
 ./mvnw -DskipTests=true clean package	
 ```
-costruire e lanciare l'immagine
+e costruire e lanciare l'immagine.
 
 ```bash 
 docker-compose build && docker-compose up 
@@ -23,10 +24,7 @@ ps -ef|grep postgres
 sudo kill -9 <numero nella seconda colonna>
 ```
 
->⛔ Attenzione:
->
-> Il docker-compose.yml prevede il build delle immagini del discovery e dell'apigateway, non ancora presenti in quel progetto
-E' quindi necessario usare docker-compose build nei singoli progetti (partendo da seabook) e successivamente usare solo docker-compose up in seabook
+
 
 
 
