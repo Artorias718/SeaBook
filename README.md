@@ -10,13 +10,13 @@ mvn -N io.takari:maven:wrapper
 ```
 ./mvnw -DskipTests=true clean package	
 ```
-e costruire e lanciare l'immagine.
+e costruire e lanciare il docker-compose.
 
 ```bash 
 docker-compose build && docker-compose up 
 ```
 
-Dal momento che verrà lanciato un conteiner con postgres, potrebbe essere necessario killare prima il postgres locale 
+Dal momento che verrà lanciato un container con postgres, potrebbe essere necessario killare prima il postgres locale 
 
 ```bash 
 ps -ef|grep postgres
