@@ -1,8 +1,8 @@
 package com.javasampleapproach.springrest.postgresql.controller;
 
-import com.javasampleapproach.springrest.postgresql.model.Spot;
-import com.javasampleapproach.springrest.postgresql.model.Stabilimento;
+import com.javasampleapproach.springrest.postgresql.model.*;
 import com.javasampleapproach.springrest.postgresql.repo.SpotRepository;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/v1")
 public class SpotController {
@@ -37,7 +37,6 @@ public class SpotController {
 
         Spot newspot = repository.save(new Spot(sid, spot.getPrice()));
         return newspot;
-
     }
 
     @DeleteMapping("/stabilimenti/{sid}/delete_spots")
@@ -71,6 +70,8 @@ public class SpotController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+
 
 
 }

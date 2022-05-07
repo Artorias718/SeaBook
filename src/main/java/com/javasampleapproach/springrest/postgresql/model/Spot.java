@@ -6,8 +6,9 @@ import javax.persistence.*;
 @Table(name = "spot")
 public class Spot {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "spotId", nullable = false)
-    private Long idd;
+    private Long id;
 
     @Column(name = "sid")
     private long sid;
@@ -19,10 +20,7 @@ public class Spot {
     private double price;
 
     public Long getId() {
-        return idd;
-    }
-    public void setId(Long idd) {
-        this.idd = idd;
+        return id;
     }
 
     public long getStabId() {

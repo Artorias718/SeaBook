@@ -62,6 +62,10 @@ public class Stabilimento {
         this.phoneNumber = phoneNumber;
     }
 
+    public Stabilimento(String name) {
+        this.name = name;
+    }
+
 
 }
 

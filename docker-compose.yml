@@ -5,24 +5,26 @@ version: '3'
 
 services:
 
-  discovery:
-    build: .
-    image: discovery
-    ports:
-      - "8761:8761"
+  #discovery:
+    #build: .
+    #image: discovery
+    #ports:
+    #  - "8761:8761"
 
-  apigateway:
-    build: .
-    image: apigateway
-    environment:
-      eureka.client.serviceUrl.defaultZone: http://discovery:8761/eureka/
-    ports:
-      - "9000:9000"
-    depends_on:
-      - discovery
+  #apigateway:
+    #build: .
+    #image: apigateway
+    #environment:
+    #  eureka.client.serviceUrl.defaultZone: http://discovery:8761/eureka/
+    #ports:
+    #  - "9000:9000"
+    #depends_on:
+    #  - discovery
 
   dbpostgresql: #servizio1 (inventato da noi, deve coincidere con quello nel application.properties)
     image: "postgres"  #nome fisso di postgres, non inventato
+    volumes:
+      - dibby:/var/lib/postgresql/data:rw
     ports:
       - "5432"
     environment: #variabili di ambiente
@@ -30,8 +32,8 @@ services:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin
       restart: unless-stopped
-    depends_on:
-      - discovery
+    #depends_on:
+      #- discovery
 
   app: #servizio2, il nostro container, quello che abbiamo creato nel dockerfile, il backend
     build: .
@@ -43,5 +45,13 @@ services:
       - "8080:8080"
     depends_on: #alias links, uno dei due è in deprecazione
       - dbpostgresql  #importante, sennò non si connette col database
-      - discovery
+      #- discovery
+volumes:
+  dibby:
+
+#poi da rimuovere, serve a far comunicare diversi docker-compose in un network di default, ma kube dovrebbe già farlo
+networks:
+  default:
+    external:
+      name: front_default
 

@@ -1,0 +1,86 @@
+name: seabook
+
+# The build section defines how to build the images of your development environment
+# More info: https://www.okteto.com/docs/reference/manifest/#build
+build:
+
+  # You can use the following env vars to refer to this image in your deploy commands:
+  #  - OKTETO_BUILD_APIGATEWAY_REGISTRY: image registry
+  #  - OKTETO_BUILD_APIGATEWAY_REPOSITORY: image repo
+  #  - OKTETO_BUILD_APIGATEWAY_IMAGE: image name
+  #  - OKTETO_BUILD_APIGATEWAY_TAG: image tag
+  apigateway:
+    context: .
+    dockerfile: Dockerfile
+    image: apigateway
+
+  # You can use the following env vars to refer to this image in your deploy commands:
+  #  - OKTETO_BUILD_APP_REGISTRY: image registry
+  #  - OKTETO_BUILD_APP_REPOSITORY: image repo
+  #  - OKTETO_BUILD_APP_IMAGE: image name
+  #  - OKTETO_BUILD_APP_TAG: image tag
+  app:
+    context: .
+    dockerfile: Dockerfile
+    image: appbootrest
+
+  # You can use the following env vars to refer to this image in your deploy commands:
+  #  - OKTETO_BUILD_DISCOVERY_REGISTRY: image registry
+  #  - OKTETO_BUILD_DISCOVERY_REPOSITORY: image repo
+  #  - OKTETO_BUILD_DISCOVERY_IMAGE: image name
+  #  - OKTETO_BUILD_DISCOVERY_TAG: image tag
+  discovery:
+    context: .
+    dockerfile: Dockerfile
+    image: discovery
+
+# The deploy section defines how to deploy your development environment
+# More info: https://www.okteto.com/docs/reference/manifest/#deploy
+deploy:
+  compose: docker-compose.yml
+
+# The dependencies section defines other git repositories to be deployed as part of your development environment
+# More info: https://www.okteto.com/docs/reference/manifest/#dependencies
+# dependencies:
+#   - https://github.com/okteto/sample
+
+
+# The dev section defines how to activate a development container
+# More info: https://www.okteto.com/docs/reference/manifest/#dev
+dev:
+  apigateway:
+    image: okteto/maven:3
+    command: bash
+    workdir: /usr/src/app
+    sync:
+      - .:/usr/src/app
+    forward:
+      - 5005:5005
+      - 9000:9000
+      - 8080:8080
+    volumes:
+      - /root/.m2
+  app:
+    image: okteto/maven:3
+    command: bash
+    workdir: /usr/src/app
+    sync:
+      - .:/usr/src/app
+    forward:
+      - 5005:5005
+      - 8080:8080
+    volumes:
+      - /root/.m2
+  discovery:
+    image: okteto/maven:3
+    command: bash
+    workdir: /usr/src/app
+    sync:
+      - .:/usr/src/app
+    forward:
+      - 5005:5005
+      - 8761:8761
+      - 8080:8080
+    volumes:
+      - /root/.m2
+

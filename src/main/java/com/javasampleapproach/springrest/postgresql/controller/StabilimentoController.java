@@ -6,12 +6,13 @@ import java.util.Optional;
 
 import com.javasampleapproach.springrest.postgresql.model.Stabilimento;
 import com.javasampleapproach.springrest.postgresql.repo.StabilimentoRepository;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/v1")
 public class StabilimentoController {
@@ -74,24 +75,13 @@ public class StabilimentoController {
         }
     }
 
+    @RabbitListener(queues = RabbitmqConfiguration.queueName)
+    public void listener(String message){
+        System.out.println(message);
+        repository.save(new Stabilimento(message));
+    }
 
 
-
-
-
-
-
-
-
-
-
-
-    /*@PostMapping(value = "/stabilimenti/{id}/addPosto")
-    public void postPostoInStabilimento(@RequestBody Spot posto, @PathVariable("id") long id) {
-
-        //manca dire a quale stabilimento, tramite l'id
-        Spot _posto = lista_posti.save(new Spot());
-    }*/
 
 
 
