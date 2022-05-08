@@ -21,12 +21,13 @@ spec:
         kompose.version: 1.26.0 (40646f47)
       creationTimestamp: null
       labels:
+        io.kompose.network/front_default: "true"
         io.kompose.service: discovery
     spec:
       containers:
         - env:
             - name: eureka.client.serviceUrl.defaultZone
-              value: http://discovery:8761/eureka/
+              value: http://locahost:8761/eureka/
           image: artorias94/discovery
           name: discovery
           ports:

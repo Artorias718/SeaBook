@@ -35,6 +35,12 @@ Per pulire i dati nel postgres in docker usare
 docker-compose down 
 ```
 
+Per liberare una porta
+```bash
+sudo kill -9 `sudo lsof -t -i:5672`
+```
+
+
 Per attivare la persistenza dei dati nel postgres locale impostare nell application.properties
 ```bash
 spring.jpa.hibernate.ddl-auto = update 

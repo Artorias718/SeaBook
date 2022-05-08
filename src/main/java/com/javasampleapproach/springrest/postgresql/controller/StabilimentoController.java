@@ -75,11 +75,12 @@ public class StabilimentoController {
         }
     }
 
-    @RabbitListener(queues = RabbitmqConfiguration.queueName)
-    public void listener(String message){
-        System.out.println(message);
-        repository.save(new Stabilimento(message));
-    }
+    /*@RabbitListener(queues = RabbitmqConfiguration.queueName)
+    public void listener(List message){
+        //System.out.println(message);
+        repository.save(new Stabilimento(message.toString()));
+
+    }*/
 
 
 

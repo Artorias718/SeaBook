@@ -3,9 +3,14 @@ package com.javasampleapproach.springrest.postgresql.controller;
 import com.javasampleapproach.springrest.postgresql.model.*;
 import com.javasampleapproach.springrest.postgresql.repo.SpotRepository;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -39,6 +44,7 @@ public class SpotController {
         return newspot;
     }
 
+    @Transactional
     @DeleteMapping("/stabilimenti/{sid}/delete_spots")
     public ResponseEntity<String> deleteAllSpotsInStab(@PathVariable long sid) {
 
@@ -71,7 +77,29 @@ public class SpotController {
         }
     }
 
+    @RabbitListener(queues = RabbitmqConfiguration.queueName)
+    public void listener(List<Integer> message) {
+        for (Integer i : message) {
+
+            Optional<Spot> old_spot = repository.findById(Long.valueOf(i));
+
+            Spot new_spot = old_spot.get();
+            new_spot.IsBooked(true);
+            repository.save(new_spot);
+
+            //System.out.println(i);
+            //updateFlag(Long.valueOf(i));        System.out.println(repository.findById(Long.valueOf(i)));
+        }
 
 
 
-}
+    }
+
+    /*@Modifying(clearAutomatically = true)
+    @Transactional
+    @Query("update Spot s set s.isBooked=true where s.id =:iddi")
+    public void updateFlag(@Param("iddi") long iddi){
+    }*/
+
+
+    }

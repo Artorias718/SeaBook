@@ -1,5 +1,7 @@
 package com.javasampleapproach.springrest.postgresql.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.persistence.*;
 
 @Entity
@@ -13,11 +15,13 @@ public class Spot {
     @Column(name = "sid")
     private long sid;
 
+    @JsonProperty("isBooked")
     @Column(name = "isBooked")
     private boolean isBooked;
 
     @Column(name = "price")
     private double price;
+
 
     public Long getId() {
         return id;
@@ -53,6 +57,9 @@ public class Spot {
         this.price = price;
         this.isBooked = false;
     }
+
+
+
 
 
 
