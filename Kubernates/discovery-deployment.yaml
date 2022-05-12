@@ -27,7 +27,7 @@ spec:
       containers:
         - env:
             - name: eureka.client.serviceUrl.defaultZone
-              value: http://locahost:8761/eureka/
+              value: http://discovery:8761/eureka/
           image: artorias94/discovery
           name: discovery
           ports:

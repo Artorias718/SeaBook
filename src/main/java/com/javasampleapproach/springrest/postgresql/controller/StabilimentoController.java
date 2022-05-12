@@ -34,6 +34,9 @@ public class StabilimentoController {
 
         Stabilimento newstab = repository.save(new Stabilimento(stabilimento.getName(), stabilimento.getSpotsNumber(), stabilimento.getAddress(), stabilimento.getPhoneNumber()));
         return newstab;
+
+        //TODO
+        //Creare subito i posti nello stabilimento in base allo SpotsNumber
     }
 
     @GetMapping("/stabilimenti/{id}")

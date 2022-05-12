@@ -5,9 +5,6 @@ import com.javasampleapproach.springrest.postgresql.repo.SpotRepository;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +22,8 @@ public class SpotController {
     @Autowired
     SpotRepository repository;
 
+    static final String queueName = "spring-boot";
+
     @GetMapping("/stabilimenti/{sid}/lista_Posti")
     public List<Spot> getAllSpots(@PathVariable long sid) {
 
@@ -37,10 +36,17 @@ public class SpotController {
         return posti;
     }
 
+
     @PostMapping("/stabilimenti/{sid}/create_spot")
     public Spot postSpotInStabilimento(@PathVariable long sid, @RequestBody Spot spot){
 
+
         Spot newspot = repository.save(new Spot(sid, spot.getPrice()));
+
+        //TODO
+        //Incrementare il numero posti dello stabilimento
+
+
         return newspot;
     }
 
@@ -51,6 +57,9 @@ public class SpotController {
         repository.deleteAllBySid(sid);
 
         return new ResponseEntity<>("All spots in this stab have been deleted!", HttpStatus.OK);
+
+        //TODO
+        //Decrementare il numero posti dello stabilimento
     }
 
     @DeleteMapping("/stabilimenti/{sid}/{pid}/delete")
@@ -59,6 +68,9 @@ public class SpotController {
         repository.deleteById(pid);
 
         return new ResponseEntity<>("The spot have been deleted!", HttpStatus.OK);
+
+        //TODO
+        //Decrementare il numero posti dello stabilimento
     }
 
     @PutMapping("/stabilimenti/{id}/{sid}/put")
@@ -77,29 +89,24 @@ public class SpotController {
         }
     }
 
-    @RabbitListener(queues = RabbitmqConfiguration.queueName)
+    @RabbitListener(queues = queueName)
     public void listener(List<Integer> message) {
+
+
         for (Integer i : message) {
 
             Optional<Spot> old_spot = repository.findById(Long.valueOf(i));
 
-            Spot new_spot = old_spot.get();
-            new_spot.IsBooked(true);
-            repository.save(new_spot);
+            if (old_spot.isPresent()) {
+                Spot new_spot = old_spot.get();
+                new_spot.IsBooked(true);
+                repository.save(new_spot);
+            }
 
-            //System.out.println(i);
-            //updateFlag(Long.valueOf(i));        System.out.println(repository.findById(Long.valueOf(i)));
+
         }
 
 
-
     }
-
-    /*@Modifying(clearAutomatically = true)
-    @Transactional
-    @Query("update Spot s set s.isBooked=true where s.id =:iddi")
-    public void updateFlag(@Param("iddi") long iddi){
-    }*/
-
 
     }
