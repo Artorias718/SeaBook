@@ -89,7 +89,7 @@ public class SpotController {
         }
     }
 
-    @RabbitListener(queues = queueName)
+    @RabbitListener(queues = "bookingQueue")
     public void listener(List<Integer> message) {
 
 
@@ -100,6 +100,26 @@ public class SpotController {
             if (old_spot.isPresent()) {
                 Spot new_spot = old_spot.get();
                 new_spot.IsBooked(true);
+                repository.save(new_spot);
+            }
+
+
+        }
+
+
+    }
+
+    @RabbitListener(queues = "debookingQueue")
+    public void listener2(List<Integer> message) {
+
+
+        for (Integer i : message) {
+
+            Optional<Spot> old_spot = repository.findById(Long.valueOf(i));
+
+            if (old_spot.isPresent()) {
+                Spot new_spot = old_spot.get();
+                new_spot.IsBooked(false);
                 repository.save(new_spot);
             }
 

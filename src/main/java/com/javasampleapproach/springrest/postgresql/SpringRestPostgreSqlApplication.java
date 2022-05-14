@@ -15,25 +15,34 @@ import org.springframework.context.annotation.Bean;
 public class SpringRestPostgreSqlApplication {
 	static final String topicExchangeName = "spring-boot-exchange";
 
-	static final String queueName = "spring-boot";
+	static final String queueName = "bookingQueue";
+	static final String queueName2 = "debookingQueue";
 
-
-	//gestisce la coda
-	@Bean
-	Queue queue() {
-		return new Queue(queueName, false);
-	}
-	//controlla lo scambio messaggi
 	@Bean
 	TopicExchange exchange() {
 		return new TopicExchange(topicExchangeName);
 	}
 
-	//permette il binding tra la coda e l'exchange, i messaggi che arrivano al topic exchange vengono inseriti automaticamente nella coda
 	@Bean
-	Binding binding(Queue queue, TopicExchange exchange) {
-		return BindingBuilder.bind(queue).to(exchange).with("foo.bar.#");
+	Queue queue() {
+		return new Queue(queueName, false);
 	}
+
+	@Bean
+	Queue queue2() {
+		return new Queue(queueName2, false);
+	}
+
+	@Bean
+	Binding binding1(TopicExchange exchange) {
+		return BindingBuilder.bind(queue()).to(exchange).with("foo.bar.#");
+	}
+
+	@Bean
+	Binding binding2(TopicExchange exchange) {
+		return BindingBuilder.bind(queue2()).to(exchange).with("foo2.bar.#");
+	}
+
 
 	public static void main(String[] args) {
 		SpringApplication.run(SpringRestPostgreSqlApplication.class, args);

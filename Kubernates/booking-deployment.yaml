@@ -25,7 +25,10 @@ spec:
         io.kompose.service: booking
     spec:
       containers:
-        - image: artorias94/booking
+        - env:
+            - name: eureka.client.serviceUrl.defaultZone
+              value: http://discovery:8761/eureka/
+          image: artorias94/booking
           name: booking
           ports:
             - containerPort: 7500
