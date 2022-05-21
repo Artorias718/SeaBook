@@ -21,17 +21,18 @@ services:
     #depends_on:
     #  - discovery
 
-  dbpostgresql: #servizio1 (inventato da noi, deve coincidere con quello nel application.properties)
+  dbcore: #servizio1 (inventato da noi, deve coincidere con quello nel application.properties)
     image: "postgres"  #nome fisso di postgres, non inventato
     volumes:
       - dibby:/var/lib/postgresql/data:rw
     ports:
       - "5432"
     environment: #variabili di ambiente
-      POSTGRES_DB: testdb
+      POSTGRES_DB: core
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin
-      restart: unless-stopped
+      #restart: unless-stopped
+      restart: always
     #depends_on:
       #- discovery
 
@@ -44,7 +45,7 @@ services:
     ports:
       - "8080:8080"
     depends_on: #alias links, uno dei due è in deprecazione
-      - dbpostgresql  #importante, sennò non si connette col database
+      - dbcore  #importante, sennò non si connette col database
       #- discovery
 volumes:
   dibby:

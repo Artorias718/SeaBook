@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.javasampleapproach.springrest.postgresql.Proxy;
 import com.javasampleapproach.springrest.postgresql.model.Stabilimento;
 import com.javasampleapproach.springrest.postgresql.repo.StabilimentoRepository;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -20,6 +21,15 @@ public class StabilimentoController {
     @Autowired
     StabilimentoRepository repository;
 
+    @Autowired
+    Proxy proxy;
+
+    @GetMapping("/google/{placeId}")
+    public String getDetails(@PathVariable String placeId) {
+        //TODO decidere come fare per manipolare la post con place_id
+        return proxy.getDetails(placeId);
+    }
+
     @GetMapping("/stabilimenti")
     public List<Stabilimento> getAllStabilimenti() {
 
@@ -34,15 +44,16 @@ public class StabilimentoController {
 
         Stabilimento newstab = repository.save(new Stabilimento(stabilimento.getName(), stabilimento.getSpotsNumber(), stabilimento.getAddress(), stabilimento.getPhoneNumber()));
         return newstab;
-
-        //TODO
-        //Creare subito i posti nello stabilimento in base allo SpotsNumber
+        //TODO aggiungere campo opzionale google_id, quando c'è fare chiamata api a google per recuperare le recensioni
     }
 
     @GetMapping("/stabilimenti/{id}")
     public Optional<Stabilimento> getStabilimento(@PathVariable long id){
 
+        //TODO fare chiamata api per aggiornare le recensioni
+        //TODO fare chiamata per mostrare la maps con "dove siamo"
         return repository.findById(id);
+
     }
 
     @DeleteMapping("/stabilimenti/{id}/delete")
@@ -77,17 +88,6 @@ public class StabilimentoController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-
-    /*@RabbitListener(queues = RabbitmqConfiguration.queueName)
-    public void listener(List message){
-        //System.out.println(message);
-        repository.save(new Stabilimento(message.toString()));
-
-    }*/
-
-
-
-
 
 
 }

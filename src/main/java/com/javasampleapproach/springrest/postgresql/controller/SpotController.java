@@ -2,6 +2,7 @@ package com.javasampleapproach.springrest.postgresql.controller;
 
 import com.javasampleapproach.springrest.postgresql.model.*;
 import com.javasampleapproach.springrest.postgresql.repo.SpotRepository;
+import com.javasampleapproach.springrest.postgresql.repo.StabilimentoRepository;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,8 @@ public class SpotController {
 
     @Autowired
     SpotRepository repository;
+    @Autowired
+    StabilimentoRepository stab_repository;
 
     static final String queueName = "spring-boot";
 
@@ -40,12 +43,15 @@ public class SpotController {
     @PostMapping("/stabilimenti/{sid}/create_spot")
     public Spot postSpotInStabilimento(@PathVariable long sid, @RequestBody Spot spot){
 
-
+        //TODO verificare se funziona dopo aver risolto con il db
         Spot newspot = repository.save(new Spot(sid, spot.getPrice()));
+        Optional<Stabilimento> stab = stab_repository.findById(sid);
 
-        //TODO
-        //Incrementare il numero posti dello stabilimento
-
+        if (stab.isPresent()) {
+            Stabilimento s = stab.get();
+            s.increaseCapacity();
+            stab_repository.save(s);
+        }
 
         return newspot;
     }
@@ -58,8 +64,7 @@ public class SpotController {
 
         return new ResponseEntity<>("All spots in this stab have been deleted!", HttpStatus.OK);
 
-        //TODO
-        //Decrementare il numero posti dello stabilimento
+        //TODO Decrementare il numero posti dello stabilimento
     }
 
     @DeleteMapping("/stabilimenti/{sid}/{pid}/delete")
@@ -69,8 +74,7 @@ public class SpotController {
 
         return new ResponseEntity<>("The spot have been deleted!", HttpStatus.OK);
 
-        //TODO
-        //Decrementare il numero posti dello stabilimento
+        //TODO Decrementare il numero posti dello stabilimento
     }
 
     @PutMapping("/stabilimenti/{id}/{sid}/put")

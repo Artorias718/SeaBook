@@ -52,6 +52,14 @@ public class Stabilimento {
         this.phoneNumber = phoneNumber;
     }
 
+    public void increaseCapacity(){
+        this.capacity++;
+    }
+    public void decreaseCapacity(){
+        this.capacity--;
+    }
+
+
     public Stabilimento() {
     }
 
