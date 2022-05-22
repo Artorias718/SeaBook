@@ -18,19 +18,22 @@ public class Customer {
 	@Column(name = "name")
 	private String name;
 
-	@Column(name = "age")
-	private int age;
+	@Column(name = "email")
+	private String email;
 
-	@Column(name = "active")
-	private boolean active;
+	public String getEmail() {
+		return email;
+	}
 
+	public void setEmail(String email) {
+		this.email = email;
+	}
 	public Customer() {
 	}
 
-	public Customer(String name, int age) {
+	public Customer(String name, String email) {
 		this.name = name;
-		this.age = age;
-		this.active = false;
+		this.email = email;
 	}
 
 	public long getId() {
@@ -45,24 +48,6 @@ public class Customer {
 		return this.name;
 	}
 
-	public void setAge(int age) {
-		this.age = age;
-	}
 
-	public int getAge() {
-		return this.age;
-	}
 
-	public boolean isActive() {
-		return active;
-	}
-
-	public void setActive(boolean active) {
-		this.active = active;
-	}
-
-	@Override
-	public String toString() {
-		return "Customer [id=" + id + ", name=" + name + ", age=" + age + ", active=" + active + "]";
-	}
 }

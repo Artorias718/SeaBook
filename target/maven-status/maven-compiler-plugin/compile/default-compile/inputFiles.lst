@@ -1,5 +1,6 @@
 /home/artorias/SeaBook/src/main/java/com/javasampleapproach/springrest/postgresql/model/Customer.java
 /home/artorias/SeaBook/src/main/java/com/javasampleapproach/springrest/postgresql/controller/SpotController.java
+/home/artorias/SeaBook/src/main/java/com/javasampleapproach/springrest/postgresql/configs/Oauth2AuthenticationSuccessHandler.java
 /home/artorias/SeaBook/src/main/java/com/javasampleapproach/springrest/postgresql/controller/CustomerController.java
 /home/artorias/SeaBook/src/main/java/com/javasampleapproach/springrest/postgresql/Proxy.java
 /home/artorias/SeaBook/src/main/java/com/javasampleapproach/springrest/postgresql/SpringRestPostgreSqlApplication.java
