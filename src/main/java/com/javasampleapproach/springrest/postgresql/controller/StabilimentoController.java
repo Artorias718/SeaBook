@@ -7,11 +7,11 @@ import java.util.Optional;
 import com.javasampleapproach.springrest.postgresql.Proxy;
 import com.javasampleapproach.springrest.postgresql.model.Stabilimento;
 import com.javasampleapproach.springrest.postgresql.repo.StabilimentoRepository;
-import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.json.*;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
@@ -25,16 +25,26 @@ public class StabilimentoController {
     Proxy proxy;
 
     @GetMapping("/google/{placeId}")
-    public String getDetails(@PathVariable String placeId) {
-        //TODO decidere come fare per manipolare la post con place_id
+    public String getDetails(@PathVariable String placeId) throws JSONException {
+
+        JSONObject obj = new JSONObject(proxy.getDetails(placeId));
+        String a = obj.getJSONObject("result").getString("name");
+        System.out.println(a);
+
+
         return proxy.getDetails(placeId);
+
     }
 
     @GetMapping("/stabilimenti")
-    public List<Stabilimento> getAllStabilimenti() {
+    public List<Stabilimento> getAllStabilimenti() throws JSONException {
 
         List<Stabilimento> stabilimenti = new ArrayList<>();
         repository.findAll().forEach(stabilimenti::add);
+
+        for(Stabilimento stab : stabilimenti){
+            updateRating(stab.getId());
+        }
 
         return stabilimenti;
     }
@@ -42,16 +52,35 @@ public class StabilimentoController {
     @PostMapping(value = "/stabilimenti/create")
     public Stabilimento postStabilimento(@RequestBody Stabilimento stabilimento) {
 
-        Stabilimento newstab = repository.save(new Stabilimento(stabilimento.getName(), stabilimento.getSpotsNumber(), stabilimento.getAddress(), stabilimento.getPhoneNumber()));
+        Stabilimento newstab = repository.save(
+                new Stabilimento(
+                        stabilimento.getName(),
+                        stabilimento.getSpotsNumber(),
+                        stabilimento.getAddress(),
+                        stabilimento.getPhoneNumber(),
+                        stabilimento.getGpid(),
+                        stabilimento.getRating()));
         return newstab;
-        //TODO aggiungere campo opzionale google_id, quando c'è fare chiamata api a google per recuperare le recensioni
+    }
+    @PostMapping(value = "/stabilimenti/create/{placeId}")
+    public Stabilimento postStabilimentoByGoogle(@PathVariable String placeId) throws JSONException {
+
+        JSONObject obj = new JSONObject(proxy.getDetails(placeId));
+        Stabilimento newstab = repository.save(
+                new Stabilimento(
+                        obj.getJSONObject("result").getString("name"),
+                        0,
+                        obj.getJSONObject("result").getString("formatted_address"),
+                        obj.getJSONObject("result").getString("formatted_phone_number"),
+                        obj.getJSONObject("result").getString("place_id"),
+                        obj.getJSONObject("result").getDouble("rating")));
+        return newstab;
     }
 
     @GetMapping("/stabilimenti/{id}")
-    public Optional<Stabilimento> getStabilimento(@PathVariable long id){
+    public Optional<Stabilimento> getStabilimento(@PathVariable long id) throws JSONException {
 
-        //TODO fare chiamata api per aggiornare le recensioni
-        //TODO fare chiamata per mostrare la maps con "dove siamo"
+        updateRating(id);
         return repository.findById(id);
 
     }
@@ -83,10 +112,25 @@ public class StabilimentoController {
             _stab.setSpotsNumber(stabilimento.getSpotsNumber());
             _stab.setAddress(stabilimento.getAddress());
             _stab.setPhoneNumber(stabilimento.getPhoneNumber());
+            _stab.setGpid(stabilimento.getGpid());
+            _stab.setRating(stabilimento.getRating());
             return new ResponseEntity<>(repository.save(_stab), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+    }
+
+    public void updateRating(long id) throws JSONException {
+
+        Optional<Stabilimento> stabData = repository.findById(id);
+        Stabilimento _stab = stabData.get();
+
+        if (_stab.getGpid() != null){
+            JSONObject obj = new JSONObject(proxy.getDetails(_stab.getGpid()));
+            _stab.setRating(obj.getJSONObject("result").getDouble("rating"));
+            repository.save(_stab);
+        }
+
     }
 
 

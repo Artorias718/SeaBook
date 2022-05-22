@@ -4,7 +4,6 @@ com/javasampleapproach/springrest/postgresql/Proxy.class
 com/javasampleapproach/springrest/postgresql/repo/StabilimentoRepository.class
 com/javasampleapproach/springrest/postgresql/model/Stabilimento.class
 com/javasampleapproach/springrest/postgresql/controller/CustomerController.class
-com/javasampleapproach/springrest/postgresql/configs/SecurityConfiguration.class
 com/javasampleapproach/springrest/postgresql/controller/SpotController.class
 com/javasampleapproach/springrest/postgresql/repo/CustomerRepository.class
 com/javasampleapproach/springrest/postgresql/repo/SpotRepository.class

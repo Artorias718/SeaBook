@@ -22,6 +22,31 @@ public class Stabilimento {
     @Column(name ="phoneNumber")
     private String phoneNumber;
 
+    @Column(name = "gpid")
+    private String gpid;
+
+
+    @Column(name = "rating")
+    private double rating;
+
+    public double getRating() {
+        return rating;
+    }
+
+    public void setRating(double rating) {
+        this.rating = rating;
+    }
+
+
+    public String getGpid() {
+        return gpid;
+    }
+
+    public void setGpid(String gpid) {
+        this.gpid = gpid;
+    }
+
+
 
     public Long getId() {
         return id;
@@ -63,11 +88,13 @@ public class Stabilimento {
     public Stabilimento() {
     }
 
-    public Stabilimento(String name, int capacity, String address, String phoneNumber) {
+    public Stabilimento(String name, int capacity, String address, String phoneNumber, String gpid, double rating) {
         this.name = name;
         this.capacity = capacity;
         this.address = address;
         this.phoneNumber = phoneNumber;
+        this.gpid = gpid;
+        this.rating = rating;
     }
 
     public Stabilimento(String name) {
