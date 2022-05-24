@@ -3,6 +3,8 @@ package com.javasampleapproach.springrest.postgresql.controller;
 import com.javasampleapproach.springrest.postgresql.model.*;
 import com.javasampleapproach.springrest.postgresql.repo.SpotRepository;
 import com.javasampleapproach.springrest.postgresql.repo.StabilimentoRepository;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +46,30 @@ public class SpotController {
     public Spot postSpotInStabilimento(@PathVariable long sid, @RequestBody Spot spot){
 
         //TODO verificare se funziona dopo aver risolto con il db
+        Spot newspot = repository.save(new Spot(sid, spot.getPrice()));
+        Optional<Stabilimento> stab = stab_repository.findById(sid);
+
+        if (stab.isPresent()) {
+            Stabilimento s = stab.get();
+            s.increaseCapacity();
+            stab_repository.save(s);
+        }
+
+        return newspot;
+    }
+
+    @PostMapping("/stabilimenti/{sid}/create_spots")
+    public Spot postSpotInStabilimento(@PathVariable long sid, @RequestBody String jsonSpotList){
+
+        try {
+            JSONObject spotList = new JSONObject(jsonSpotList);
+
+
+
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+
         Spot newspot = repository.save(new Spot(sid, spot.getPrice()));
         Optional<Stabilimento> stab = stab_repository.findById(sid);
 

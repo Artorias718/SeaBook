@@ -1,7 +1,7 @@
 com/javasampleapproach/springrest/postgresql/controller/LoginController.class
 com/javasampleapproach/springrest/postgresql/model/Spot.class
-com/javasampleapproach/springrest/postgresql/Proxy.class
 com/javasampleapproach/springrest/postgresql/repo/StabilimentoRepository.class
+com/javasampleapproach/springrest/postgresql/Proxy.class
 com/javasampleapproach/springrest/postgresql/model/Stabilimento.class
 com/javasampleapproach/springrest/postgresql/controller/CustomerController.class
 com/javasampleapproach/springrest/postgresql/controller/SpotController.class

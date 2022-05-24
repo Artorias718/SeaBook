@@ -120,6 +120,20 @@ public class StabilimentoController {
         }
     }
 
+    @PutMapping("/stabilimenti/{id}/putCapacity/{capacity}")
+    public ResponseEntity<Stabilimento> updateStabilimento(@PathVariable("id") long id, @PathVariable ("capacity") int capacity) {
+
+        Optional<Stabilimento> stabData = repository.findById(id);
+
+        if (stabData.isPresent()) {
+            Stabilimento _stab = stabData.get();
+            _stab.setSpotsNumber(capacity);
+            return new ResponseEntity<>(repository.save(_stab), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
     public void updateRating(long id) throws JSONException {
 
         Optional<Stabilimento> stabData = repository.findById(id);
