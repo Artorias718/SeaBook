@@ -8,6 +8,9 @@ public interface Proxy {
 
     String GoogleKey = "AIzaSyAk5gXXtzL3bDr--V7jI71K42Bb1Yp7fwY";
 
-    @GetMapping("/place/details/json?place_id={placeId}&key="+GoogleKey+"&fields=name,formatted_address,formatted_phone_number,place_id,rating")
+    @GetMapping("/place/details/json?place_id={placeId}&key="+GoogleKey+"&fields=name,formatted_address,formatted_phone_number,place_id,rating,photos")
     String getDetails(@PathVariable String placeId);
+
+//    @GetMapping("/place/photo?maxwidth=400&photo_reference={photoRef}&key=" + GoogleKey)
+//    String getPhoto(@PathVariable String photoRef);
 }

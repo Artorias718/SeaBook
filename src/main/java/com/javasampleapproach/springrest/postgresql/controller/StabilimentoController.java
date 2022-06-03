@@ -66,6 +66,21 @@ public class StabilimentoController {
     public Stabilimento postStabilimentoByGoogle(@PathVariable String placeId) throws JSONException {
 
         JSONObject obj = new JSONObject(proxy.getDetails(placeId));
+        JSONArray photos = obj.getJSONObject("result").getJSONArray("photos");
+//        String photos = String.valueOf(obj.getJSONObject("result").getString("photos"));
+//        System.out.println(photos);
+        int length = photos.length();
+        for (int i = 0; i < length; i++) {
+            JSONObject photo = photos.getJSONObject(i);
+            System.out.println(photo.get("photo_reference"));
+        }
+        JSONObject firstPhoto = photos.getJSONObject(0);
+        System.out.println("firstPhoto: " + firstPhoto.get("photo_reference"));
+        String photo_reference0 = firstPhoto.getString("photo_reference");
+
+        //String photoLink = proxy.getPhoto(photo_reference0);
+        //System.out.println("/n/n/n/n/n" + photoLink + "/n/n/n/n/n/n/n");
+
         Stabilimento newstab = repository.save(
                 new Stabilimento(
                         obj.getJSONObject("result").getString("name"),
@@ -73,7 +88,9 @@ public class StabilimentoController {
                         obj.getJSONObject("result").getString("formatted_address"),
                         obj.getJSONObject("result").getString("formatted_phone_number"),
                         obj.getJSONObject("result").getString("place_id"),
-                        obj.getJSONObject("result").getDouble("rating")));
+                        obj.getJSONObject("result").getDouble("rating"),
+                        photo_reference0
+                ));
         return newstab;
     }
 

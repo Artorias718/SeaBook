@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -62,24 +63,33 @@ public class SpotController {
     public Spot postSpotInStabilimento(@PathVariable long sid, @RequestBody String jsonSpotList){
 
         try {
-            JSONObject spotList = new JSONObject(jsonSpotList);
+            //JSONObject spotList = new JSONObject(jsonSpotList);
+            JSONObject jsonObject = new JSONObject(jsonSpotList.trim());
+            Iterator<String> keys = jsonObject.keys();
 
-
+            while(keys.hasNext()) {
+                String key = keys.next();
+                if (jsonObject.get(key) instanceof JSONObject) {
+                    // do something with jsonObject here
+                    System.out.println(key);
+                }
+            }
 
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }
 
-        Spot newspot = repository.save(new Spot(sid, spot.getPrice()));
-        Optional<Stabilimento> stab = stab_repository.findById(sid);
-
-        if (stab.isPresent()) {
-            Stabilimento s = stab.get();
-            s.increaseCapacity();
-            stab_repository.save(s);
-        }
-
-        return newspot;
+//        Spot newspot = repository.save(new Spot(sid, spot.getPrice()));
+//        Optional<Stabilimento> stab = stab_repository.findById(sid);
+//
+//        if (stab.isPresent()) {
+//            Stabilimento s = stab.get();
+//            s.increaseCapacity();
+//            stab_repository.save(s);
+//        }
+//
+//        return newspot;
+        return null;
     }
 
     @Transactional
