@@ -3,6 +3,8 @@ package com.javasampleapproach.springrest.postgresql.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
+import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "spot")
@@ -14,6 +16,22 @@ public class Spot {
 
     @Column(name = "sid")
     private long sid;
+
+    /**
+     * attribute che mantiene tutte le date per cui il posto e' prenotato
+     */
+    // TODO(1) map data boolean
+    @ElementCollection
+    @Column(name = "datePrenotate")
+    private List<Date> datePrenotate;
+
+    public List<Date> getDatePrenotate() {
+        return datePrenotate;
+    }
+
+    public void setDatePrenotate(List<Date> datePrenotate) {
+        this.datePrenotate = datePrenotate;
+    }
 
     @JsonProperty("isBooked")
     @Column(name = "isBooked")
