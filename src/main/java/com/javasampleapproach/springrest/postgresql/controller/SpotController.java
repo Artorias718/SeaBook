@@ -53,10 +53,8 @@ public class SpotController {
         List<Spot> posti = new ArrayList<>();
         repository.findAllBySid(sid).forEach(posti::add);
 
-        for (Spot s: posti
-             ) {
+        for (Spot s: posti) {
             List<Date> datesList = s.getDatePrenotate();
-            // siccome l'ora non e' la stessa probabilemente non trovera' niente
             if (datesList.contains(date)) {
                 s.IsBooked(true);
             }
@@ -143,25 +141,81 @@ public class SpotController {
     }
 
     // TODO(3) il messaggio dev'essere del tipo data e lista di posti
+    @Transactional
     @RabbitListener(queues = "bookingQueue")
     public void listener(List<Integer> message) {
 
+        System.out.println("\n\n\n\n\n\n\n\n" + message + "\n\n\n\n\n\n\n\n");
+        Calendar rightNow = Calendar.getInstance();
+        rightNow.set(Calendar.HOUR_OF_DAY, 0);
+        rightNow.set(Calendar.MINUTE, 0);
+        rightNow.set(Calendar.SECOND, 0);
+        rightNow.set(Calendar.MILLISECOND, 0);
+        Date dateWithoutTime = rightNow.getTime();
+        System.out.println("\n\n\n\n\n\n\n\n" + dateWithoutTime + "\n\n\n\n\n\n\n\n");
 
         for (Integer i : message) {
+//            Optional<Spot> spot = repository.findById(Long.valueOf(id));
+//
+//            if (spot.isPresent()) {
+//                Spot _spot = spot.get();
+//                List<Date> datePrenotate = _spot.getDatePrenotate();
+//                datePrenotate.add(dataPrenotata);
+//                System.out.println("\n\n\n\n\ndate prenotate: " + _spot.getDatePrenotate());
+//                _spot.setDatePrenotate(datePrenotate);
+//            }
+//            else {
+//                System.out.println("\n\n\n\n\n Non trovato spot di id: " + id + "\n\n\n\n\n" );
+//            }
+            Long id = Long.valueOf(i);
+            Optional<Spot> spot = repository.findById(id);
 
-            Optional<Spot> old_spot = repository.findById(Long.valueOf(i));
+            if (spot.isPresent()) {
+                Spot _spot = spot.get();
+                System.out.println("\n\n\n\n\nSpot: " + _spot.getId() + "\n\n\n\n\n");
+                List<Date> datePrenotate = _spot.getDatePrenotate();
+                datePrenotate.add(dateWithoutTime);
+                System.out.println("\n\n\n\n\ndate prenotate: " + _spot.getDatePrenotate());
+                _spot.setDatePrenotate(datePrenotate);
 
-            if (old_spot.isPresent()) {
-                Spot new_spot = old_spot.get();
-                new_spot.IsBooked(true);
-                repository.save(new_spot);
+                repository.save(_spot);
             }
-
-
         }
-
-
     }
+//    public void listener(List<Integer> message) {
+//
+//        for (Integer i : message) {
+//            Optional<Spot> old_spot = repository.findById(Long.valueOf(i));
+//
+//            if (old_spot.isPresent()) {
+//                Spot new_spot = old_spot.get();
+//                new_spot.IsBooked(true);
+//                repository.save(new_spot);
+//            }
+//
+//        }
+//
+//
+//    }
+
+//    public void listener(List<Integer> message) {
+//
+//        Date reservationDate = new Date();
+//        List<Integer> postiList = message;
+//
+//        for (Integer i : postiList) {
+//            Optional<Spot> optionalSpot = repository.findById(Long.valueOf(i));
+//
+//            if (optionalSpot.isPresent()) {
+//                Spot spot = optionalSpot.get();
+//                List<Date> datePrenotateList = spot.getDatePrenotate();
+//                datePrenotateList.add(reservationDate);
+//                spot.setDatePrenotate(datePrenotateList);
+//                repository.save(spot);
+//                System.out.println("\n\n\n\n\n\n" + spot.getDatePrenotate() + "\n\n\n\n\n\n");
+//            }
+//        }
+//    }
 
     @RabbitListener(queues = "debookingQueue")
     public void listener2(List<Integer> message) {

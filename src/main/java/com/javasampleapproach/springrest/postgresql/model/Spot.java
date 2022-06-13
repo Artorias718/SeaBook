@@ -3,6 +3,7 @@ package com.javasampleapproach.springrest.postgresql.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -74,6 +75,7 @@ public class Spot {
         this.sid = sid;
         this.price = price;
         this.isBooked = false;
+        //datePrenotate = new ArrayList<>();
     }
 
 
