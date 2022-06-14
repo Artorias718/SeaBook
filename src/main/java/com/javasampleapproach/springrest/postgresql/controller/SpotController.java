@@ -13,10 +13,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Optional;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
@@ -30,16 +30,60 @@ public class SpotController {
 
     static final String queueName = "spring-boot";
 
-    @GetMapping("/stabilimenti/{sid}/lista_Posti")
-    public List<Spot> getAllSpots(@PathVariable long sid) {
+//    TODO(2) inserire nella request degli spot la data per
+//     poter impostare i posti disponibili
+    @GetMapping("/stabilimenti/{sid}/lista_Posti/{selectedDate}")
+    public List<Spot> getAllSpots(@PathVariable long sid, @PathVariable String selectedDate) {
 
         //questa mi servirà da altre parti per accedere al singolo stabilimento
         //Stabilimento x = repository.findById(id);
 
+        System.out.println("\n\n\n\n\n" + selectedDate);
+
+        String string = "January 2, 2010";
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+        Date date = null;
+        try {
+            date = format.parse(selectedDate);
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+        System.out.println(date);
+
         List<Spot> posti = new ArrayList<>();
         repository.findAllBySid(sid).forEach(posti::add);
 
+        for (Spot s: posti) {
+            List<Date> datesList = s.getDatePrenotate();
+            if (datesList.contains(date)) {
+                s.IsBooked(true);
+            }
+        }
+
         return posti;
+    }
+
+    // entry point per test add data alla lista di prenotazioni
+    // questo sucedera' tramite rabbitmq
+    @PostMapping("/spot/{id}/prenota")
+    public ResponseEntity<Spot> postSpotSetBookedDate(@PathVariable long id, @RequestBody Date dataPrenotazione) {
+        Optional<Spot> spot = repository.findById(id);
+
+        System.out.println("\n\n\n\n\nData dal client: " + dataPrenotazione);
+
+        if (spot.isPresent()) {
+            Spot _spot = spot.get();
+            List<Date> datePrenotate = _spot.getDatePrenotate();
+            datePrenotate.add(dataPrenotazione);
+            System.out.println("\n\n\n\n\ndate prenotate: " + _spot.getDatePrenotate());
+            _spot.setDatePrenotate(datePrenotate);
+
+            return new ResponseEntity<>(repository.save(_spot), HttpStatus.OK);
+        }
+        else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
     }
 
 
@@ -57,39 +101,6 @@ public class SpotController {
         }
 
         return newspot;
-    }
-
-    @PostMapping("/stabilimenti/{sid}/create_spots")
-    public Spot postSpotInStabilimento(@PathVariable long sid, @RequestBody String jsonSpotList){
-
-        try {
-            //JSONObject spotList = new JSONObject(jsonSpotList);
-            JSONObject jsonObject = new JSONObject(jsonSpotList.trim());
-            Iterator<String> keys = jsonObject.keys();
-
-            while(keys.hasNext()) {
-                String key = keys.next();
-                if (jsonObject.get(key) instanceof JSONObject) {
-                    // do something with jsonObject here
-                    System.out.println(key);
-                }
-            }
-
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
-        }
-
-//        Spot newspot = repository.save(new Spot(sid, spot.getPrice()));
-//        Optional<Stabilimento> stab = stab_repository.findById(sid);
-//
-//        if (stab.isPresent()) {
-//            Stabilimento s = stab.get();
-//            s.increaseCapacity();
-//            stab_repository.save(s);
-//        }
-//
-//        return newspot;
-        return null;
     }
 
     @Transactional
@@ -129,25 +140,59 @@ public class SpotController {
         }
     }
 
+    // TODO(3) il messaggio dev'essere del tipo data e lista di posti
+    @Transactional
     @RabbitListener(queues = "bookingQueue")
-    public void listener(List<Integer> message) {
+    public void listener(String message) throws JSONException {
 
+        // BookMessage bookMessage = (BookMessage) message;
+        System.out.println("\n\n\n\n\n\n\n\n" + message + "\n\n\n\n\n\n\n\n");
+        JSONObject obj = new JSONObject(message);
+//        String a = obj.getJSONObject("result").getString("name");
+        String dataPren = obj.getString("dataPrenotazione");
+        System.out.println(dataPren + "\n\n\n\n\n\n\n\n");
+        String listaPosti = obj.getString("listaPosti");
+        System.out.println(listaPosti + "\n\n\n\n\n\n\n\n");
 
-        for (Integer i : message) {
-
-            Optional<Spot> old_spot = repository.findById(Long.valueOf(i));
-
-            if (old_spot.isPresent()) {
-                Spot new_spot = old_spot.get();
-                new_spot.IsBooked(true);
-                repository.save(new_spot);
-            }
-
-
-        }
-
-
+        //        Calendar rightNow = Calendar.getInstance();
+//        rightNow.set(Calendar.HOUR_OF_DAY, 0);
+//        rightNow.set(Calendar.MINUTE, 0);
+//        rightNow.set(Calendar.SECOND, 0);
+//        rightNow.set(Calendar.MILLISECOND, 0);
+//        Date dateWithoutTime = rightNow.getTime();
+//        System.out.println("\n\n\n\n\n\n\n\n" + dateWithoutTime + "\n\n\n\n\n\n\n\n");
+//
+//        for (Integer i : message) {
+//            Long id = Long.valueOf(i);
+//            Optional<Spot> spot = repository.findById(id);
+//
+//            if (spot.isPresent()) {
+//                Spot _spot = spot.get();
+//                System.out.println("\n\n\n\n\nSpot: " + _spot.getId() + "\n\n\n\n\n");
+//                List<Date> datePrenotate = _spot.getDatePrenotate();
+//                datePrenotate.add(dateWithoutTime);
+//                System.out.println("\n\n\n\n\ndate prenotate: " + _spot.getDatePrenotate());
+//                _spot.setDatePrenotate(datePrenotate);
+//
+//                repository.save(_spot);
+//            }
+//        }
     }
+//    public void listener(List<Integer> message) {
+//
+//        for (Integer i : message) {
+//            Optional<Spot> old_spot = repository.findById(Long.valueOf(i));
+//
+//            if (old_spot.isPresent()) {
+//                Spot new_spot = old_spot.get();
+//                new_spot.IsBooked(true);
+//                repository.save(new_spot);
+//            }
+//
+//        }
+//
+//
+//    }
 
     @RabbitListener(queues = "debookingQueue")
     public void listener2(List<Integer> message) {

@@ -6,6 +6,7 @@ com/javasampleapproach/springrest/postgresql/configs/Oauth2AuthenticationSuccess
 com/javasampleapproach/springrest/postgresql/Proxy.class
 >>>>>>> origin/master
 com/javasampleapproach/springrest/postgresql/repo/StabilimentoRepository.class
+com/javasampleapproach/springrest/postgresql/model/BookMessage.class
 com/javasampleapproach/springrest/postgresql/Proxy.class
 com/javasampleapproach/springrest/postgresql/model/Stabilimento.class
 com/javasampleapproach/springrest/postgresql/controller/CustomerController.class
