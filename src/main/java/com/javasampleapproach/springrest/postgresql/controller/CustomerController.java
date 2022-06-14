@@ -39,11 +39,13 @@ public class CustomerController {
 	@Autowired
 	CustomerRepository repository;
 
+	@CrossOrigin(origins = "http://localhost:3000")
 	@GetMapping("/user/me")
 	public Map<String, Object> userDetails(@AuthenticationPrincipal OAuth2User user) {
 		user.getAttributes();
 		return user.getAttributes();
 	}
+
 
 	@GetMapping("/customers")
 	public List<Customer> getAllCustomers() {
