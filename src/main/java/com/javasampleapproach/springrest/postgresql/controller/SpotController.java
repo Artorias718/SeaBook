@@ -143,44 +143,40 @@ public class SpotController {
     // TODO(3) il messaggio dev'essere del tipo data e lista di posti
     @Transactional
     @RabbitListener(queues = "bookingQueue")
-    public void listener(List<Integer> message) {
+    public void listener(String message) throws JSONException {
 
+        // BookMessage bookMessage = (BookMessage) message;
         System.out.println("\n\n\n\n\n\n\n\n" + message + "\n\n\n\n\n\n\n\n");
-        Calendar rightNow = Calendar.getInstance();
-        rightNow.set(Calendar.HOUR_OF_DAY, 0);
-        rightNow.set(Calendar.MINUTE, 0);
-        rightNow.set(Calendar.SECOND, 0);
-        rightNow.set(Calendar.MILLISECOND, 0);
-        Date dateWithoutTime = rightNow.getTime();
-        System.out.println("\n\n\n\n\n\n\n\n" + dateWithoutTime + "\n\n\n\n\n\n\n\n");
+        JSONObject obj = new JSONObject(message);
+//        String a = obj.getJSONObject("result").getString("name");
+        String dataPren = obj.getString("dataPrenotazione");
+        System.out.println(dataPren + "\n\n\n\n\n\n\n\n");
+        String listaPosti = obj.getString("listaPosti");
+        System.out.println(listaPosti + "\n\n\n\n\n\n\n\n");
 
-        for (Integer i : message) {
-//            Optional<Spot> spot = repository.findById(Long.valueOf(id));
+        //        Calendar rightNow = Calendar.getInstance();
+//        rightNow.set(Calendar.HOUR_OF_DAY, 0);
+//        rightNow.set(Calendar.MINUTE, 0);
+//        rightNow.set(Calendar.SECOND, 0);
+//        rightNow.set(Calendar.MILLISECOND, 0);
+//        Date dateWithoutTime = rightNow.getTime();
+//        System.out.println("\n\n\n\n\n\n\n\n" + dateWithoutTime + "\n\n\n\n\n\n\n\n");
+//
+//        for (Integer i : message) {
+//            Long id = Long.valueOf(i);
+//            Optional<Spot> spot = repository.findById(id);
 //
 //            if (spot.isPresent()) {
 //                Spot _spot = spot.get();
+//                System.out.println("\n\n\n\n\nSpot: " + _spot.getId() + "\n\n\n\n\n");
 //                List<Date> datePrenotate = _spot.getDatePrenotate();
-//                datePrenotate.add(dataPrenotata);
+//                datePrenotate.add(dateWithoutTime);
 //                System.out.println("\n\n\n\n\ndate prenotate: " + _spot.getDatePrenotate());
 //                _spot.setDatePrenotate(datePrenotate);
+//
+//                repository.save(_spot);
 //            }
-//            else {
-//                System.out.println("\n\n\n\n\n Non trovato spot di id: " + id + "\n\n\n\n\n" );
-//            }
-            Long id = Long.valueOf(i);
-            Optional<Spot> spot = repository.findById(id);
-
-            if (spot.isPresent()) {
-                Spot _spot = spot.get();
-                System.out.println("\n\n\n\n\nSpot: " + _spot.getId() + "\n\n\n\n\n");
-                List<Date> datePrenotate = _spot.getDatePrenotate();
-                datePrenotate.add(dateWithoutTime);
-                System.out.println("\n\n\n\n\ndate prenotate: " + _spot.getDatePrenotate());
-                _spot.setDatePrenotate(datePrenotate);
-
-                repository.save(_spot);
-            }
-        }
+//        }
     }
 //    public void listener(List<Integer> message) {
 //
@@ -196,25 +192,6 @@ public class SpotController {
 //        }
 //
 //
-//    }
-
-//    public void listener(List<Integer> message) {
-//
-//        Date reservationDate = new Date();
-//        List<Integer> postiList = message;
-//
-//        for (Integer i : postiList) {
-//            Optional<Spot> optionalSpot = repository.findById(Long.valueOf(i));
-//
-//            if (optionalSpot.isPresent()) {
-//                Spot spot = optionalSpot.get();
-//                List<Date> datePrenotateList = spot.getDatePrenotate();
-//                datePrenotateList.add(reservationDate);
-//                spot.setDatePrenotate(datePrenotateList);
-//                repository.save(spot);
-//                System.out.println("\n\n\n\n\n\n" + spot.getDatePrenotate() + "\n\n\n\n\n\n");
-//            }
-//        }
 //    }
 
     @RabbitListener(queues = "debookingQueue")

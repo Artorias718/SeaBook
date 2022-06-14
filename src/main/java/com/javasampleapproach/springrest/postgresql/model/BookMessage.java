@@ -23,4 +23,12 @@ public class BookMessage implements Serializable {
     public void setListaPosti(List<Integer> listaPosti) {
         this.listaPosti = listaPosti;
     }
+
+    @Override
+    public String toString() {
+        return "BookMessage{" +
+                "dataPrenotazione=" + dataPrenotazione +
+                ", listaPosti=" + listaPosti +
+                '}';
+    }
 }
