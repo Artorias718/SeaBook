@@ -1,10 +1,6 @@
 com/javasampleapproach/springrest/postgresql/controller/LoginController.class
 com/javasampleapproach/springrest/postgresql/model/Spot.class
-<<<<<<< HEAD
-=======
 com/javasampleapproach/springrest/postgresql/configs/Oauth2AuthenticationSuccessHandler.class
-com/javasampleapproach/springrest/postgresql/Proxy.class
->>>>>>> origin/master
 com/javasampleapproach/springrest/postgresql/repo/StabilimentoRepository.class
 com/javasampleapproach/springrest/postgresql/model/BookMessage.class
 com/javasampleapproach/springrest/postgresql/Proxy.class
@@ -16,4 +12,5 @@ com/javasampleapproach/springrest/postgresql/repo/CustomerRepository.class
 com/javasampleapproach/springrest/postgresql/repo/SpotRepository.class
 com/javasampleapproach/springrest/postgresql/controller/StabilimentoController.class
 com/javasampleapproach/springrest/postgresql/SpringRestPostgreSqlApplication.class
+com/javasampleapproach/springrest/postgresql/configs/WebMvcConfig.class
 com/javasampleapproach/springrest/postgresql/model/Customer.class

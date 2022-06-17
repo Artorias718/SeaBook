@@ -3,6 +3,7 @@ package com.javasampleapproach.springrest.postgresql.controller;
 import com.javasampleapproach.springrest.postgresql.model.*;
 import com.javasampleapproach.springrest.postgresql.repo.SpotRepository;
 import com.javasampleapproach.springrest.postgresql.repo.StabilimentoRepository;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -143,16 +144,60 @@ public class SpotController {
     // TODO(3) il messaggio dev'essere del tipo data e lista di posti
     @Transactional
     @RabbitListener(queues = "bookingQueue")
-    public void listener(String message) throws JSONException {
+    public void listener(String message) throws JSONException, ParseException {
 
         // BookMessage bookMessage = (BookMessage) message;
-        System.out.println("\n\n\n\n\n\n\n\n" + message + "\n\n\n\n\n\n\n\n");
+        System.out.println("\n\n\n\n\n\n\n\n" + message + "\n");
         JSONObject obj = new JSONObject(message);
-//        String a = obj.getJSONObject("result").getString("name");
-        String dataPren = obj.getString("dataPrenotazione");
-        System.out.println(dataPren + "\n\n\n\n\n\n\n\n");
-        String listaPosti = obj.getString("listaPosti");
-        System.out.println(listaPosti + "\n\n\n\n\n\n\n\n");
+
+        String dataPrenotMsg = obj.getString("dataPrenotazione");
+        System.out.println(dataPrenotMsg + "\n\n\n");
+
+        SimpleDateFormat sdf3 = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH);
+
+        Date d1 = null;
+        try{
+            d1 = sdf3.parse(dataPrenotMsg);
+
+        }catch (Exception e){ e.printStackTrace(); }
+
+
+        System.out.println("check..." + d1);
+
+        JSONArray listaPosti = obj.getJSONArray("listaPosti");
+        System.out.println(listaPosti + "\n\n\n\n");
+
+        for (int i = 0; i < listaPosti.length(); i++) {
+            Long id = listaPosti.getLong(i);
+            Optional<Spot> spot = repository.findById(id);
+
+            if (spot.isPresent()) {
+                Spot _spot = spot.get();
+                System.out.println("\nSpot: " + _spot.getId());
+                List<Date> datePrenotate = _spot.getDatePrenotate();
+                datePrenotate.add(d1);
+                System.out.println("\ndate prenotate: " + _spot.getDatePrenotate() + "\n\n\n\n\n");
+                _spot.setDatePrenotate(datePrenotate);
+
+                repository.save(_spot);
+            }
+        }
+
+//        for (Integer i : listaPosti) {
+//            Long id = Long.valueOf(i);
+//            Optional<Spot> spot = repository.findById(id);
+//
+//                if (spot.isPresent()) {
+//                Spot _spot = spot.get();
+//                System.out.println("\n\n\n\n\nSpot: " + _spot.getId() + "\n\n\n\n\n");
+//                List<Date> datePrenotate = _spot.getDatePrenotate();
+////                datePrenotate.add(dateWithoutTime);
+//                System.out.println("\n\n\n\n\ndate prenotate: " + _spot.getDatePrenotate());
+//                _spot.setDatePrenotate(datePrenotate);
+//
+//                repository.save(_spot);
+//            }
+//        }
 
         //        Calendar rightNow = Calendar.getInstance();
 //        rightNow.set(Calendar.HOUR_OF_DAY, 0);
