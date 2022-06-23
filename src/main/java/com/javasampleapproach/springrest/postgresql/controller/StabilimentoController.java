@@ -1,12 +1,13 @@
 package com.javasampleapproach.springrest.postgresql.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import com.javasampleapproach.springrest.postgresql.Proxy;
 import com.javasampleapproach.springrest.postgresql.model.Stabilimento;
 import com.javasampleapproach.springrest.postgresql.repo.StabilimentoRepository;
+import com.javasampleapproach.springrest.postgresql.services.StabilimentoService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,7 @@ import org.json.*;
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/v1")
+@RequiredArgsConstructor
 public class StabilimentoController {
 
     @Autowired
@@ -24,6 +26,8 @@ public class StabilimentoController {
     @Autowired
     Proxy proxy;
 
+    private final StabilimentoService stabilimentoService;
+
     @GetMapping("/google/{placeId}")
     public String getDetails(@PathVariable String placeId) throws JSONException {
 
@@ -31,97 +35,51 @@ public class StabilimentoController {
         String a = obj.getJSONObject("result").getString("name");
         System.out.println(a);
 
-
         return proxy.getDetails(placeId);
 
     }
 
     @GetMapping("/stabilimenti")
-    public List<Stabilimento> getAllStabilimenti() throws JSONException {
+    public ResponseEntity<List<Stabilimento>> getAllStabilimenti() throws JSONException {
 
-        List<Stabilimento> stabilimenti = new ArrayList<>();
-        repository.findAll().forEach(stabilimenti::add);
-
-        for(Stabilimento stab : stabilimenti){
-            updateRating(stab.getId());
-        }
-
-        return stabilimenti;
+        return new ResponseEntity<>(stabilimentoService.getStabilimenti(), HttpStatus.OK);
     }
 
     @PostMapping(value = "/stabilimenti/create")
-    public Stabilimento postStabilimento(@RequestBody Stabilimento stabilimento) {
+    public ResponseEntity<Stabilimento> createStabilimento(@RequestBody Stabilimento stabilimento) {
 
-        Stabilimento newstab = repository.save(
-                new Stabilimento(
-                        stabilimento.getName(),
-                        stabilimento.getSpotsNumber(),
-                        stabilimento.getAddress(),
-                        stabilimento.getPhoneNumber(),
-                        stabilimento.getGpid(),
-                        stabilimento.getRating()));
-        return newstab;
+        return new ResponseEntity<>(stabilimentoService.createStabilimento(stabilimento), HttpStatus.CREATED);
     }
+
     @PostMapping(value = "/stabilimenti/create/{placeId}")
-    public Stabilimento postStabilimentoByGoogle(@PathVariable String placeId) throws JSONException {
+    public ResponseEntity<Stabilimento> postStabilimentoByGoogle(@PathVariable String placeId) throws JSONException {
 
-        JSONObject obj = new JSONObject(proxy.getDetails(placeId));
-        JSONArray photos = obj.getJSONObject("result").getJSONArray("photos");
-//        String photos = String.valueOf(obj.getJSONObject("result").getString("photos"));
-//        System.out.println(photos);
-        int length = photos.length();
-        for (int i = 0; i < length; i++) {
-            JSONObject photo = photos.getJSONObject(i);
-            System.out.println(photo.get("photo_reference"));
-        }
-        JSONObject firstPhoto = photos.getJSONObject(0);
-        System.out.println("firstPhoto: " + firstPhoto.get("photo_reference"));
-        String photo_reference0 = firstPhoto.getString("photo_reference");
-
-        //String photoLink = proxy.getPhoto(photo_reference0);
-        //System.out.println("/n/n/n/n/n" + photoLink + "/n/n/n/n/n/n/n");
-
-        Stabilimento newstab = repository.save(
-                new Stabilimento(
-                        obj.getJSONObject("result").getString("name"),
-                        0,
-                        obj.getJSONObject("result").getString("formatted_address"),
-                        obj.getJSONObject("result").getString("formatted_phone_number"),
-                        obj.getJSONObject("result").getString("place_id"),
-                        obj.getJSONObject("result").getDouble("rating"),
-                        photo_reference0
-                ));
-        return newstab;
+        return new ResponseEntity<>(stabilimentoService.createStabWithGoogle(placeId), HttpStatus.CREATED);
     }
 
     @GetMapping("/stabilimenti/{id}")
-    public Optional<Stabilimento> getStabilimento(@PathVariable long id) throws JSONException {
+    public ResponseEntity<Optional<Stabilimento>> getStabilimento(@PathVariable long id) throws JSONException {
 
-        updateRating(id);
-        return repository.findById(id);
+        return new ResponseEntity<>(Optional.ofNullable(stabilimentoService.getStabilimento(id)), HttpStatus.OK);
 
     }
 
     @DeleteMapping("/stabilimenti/{id}/delete")
-    public ResponseEntity<String> deleteStabilimento(@PathVariable("id") long id) {
+    public ResponseEntity<String> deleteStabilimento(@PathVariable("id") long id) throws JSONException {
 
-        repository.deleteById(id);
-
-        return new ResponseEntity<>("Stab has been deleted!", HttpStatus.OK);
+        return new ResponseEntity<>(stabilimentoService.deleteStabilimento(id), HttpStatus.OK);
     }
 
     @DeleteMapping("/stabilimenti/delete")
-    public ResponseEntity<String> deleteAllStabilimenti() {
+    public ResponseEntity<String> deleteAllStabilimenti() throws JSONException {
 
-        repository.deleteAll();
-
-        return new ResponseEntity<>("All stabilimenti have been deleted!", HttpStatus.OK);
+        return new ResponseEntity<>(stabilimentoService.deleteAllStabilimenti(), HttpStatus.OK);
     }
 
     @PutMapping("/stabilimenti/{id}/put")
-    public ResponseEntity<Stabilimento> updateStabilimento(@PathVariable("id") long id, @RequestBody Stabilimento stabilimento) {
+    public ResponseEntity<Stabilimento> updateStabilimento(@PathVariable("id") long id, @RequestBody Stabilimento stabilimento) throws JSONException {
 
-        Optional<Stabilimento> stabData = repository.findById(id);
+        Optional<Stabilimento> stabData = Optional.ofNullable(stabilimentoService.getStabilimento(id));
 
         if (stabData.isPresent()) {
             Stabilimento _stab = stabData.get();
@@ -131,12 +89,13 @@ public class StabilimentoController {
             _stab.setPhoneNumber(stabilimento.getPhoneNumber());
             _stab.setGpid(stabilimento.getGpid());
             _stab.setRating(stabilimento.getRating());
-            return new ResponseEntity<>(repository.save(_stab), HttpStatus.OK);
+            return new ResponseEntity<>(stabilimentoService.createStabilimento(_stab), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
+    //TODO spostare logica di business in @Service, solamente se da tenere
     @PutMapping("/stabilimenti/{id}/putCapacity/{capacity}")
     public ResponseEntity<Stabilimento> updateStabilimento(@PathVariable("id") long id, @PathVariable ("capacity") int capacity) {
 
@@ -150,19 +109,5 @@ public class StabilimentoController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-
-    public void updateRating(long id) throws JSONException {
-
-        Optional<Stabilimento> stabData = repository.findById(id);
-        Stabilimento _stab = stabData.get();
-
-        if (_stab.getGpid() != null){
-            JSONObject obj = new JSONObject(proxy.getDetails(_stab.getGpid()));
-            _stab.setRating(obj.getJSONObject("result").getDouble("rating"));
-            repository.save(_stab);
-        }
-
-    }
-
 
 }
