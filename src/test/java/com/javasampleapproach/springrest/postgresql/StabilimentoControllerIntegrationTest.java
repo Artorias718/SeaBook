@@ -162,5 +162,17 @@ public class StabilimentoControllerIntegrationTest {
 
     }
 
+//TODO testing degli errori (404, ecc)
+
+    /*
+    1. quando chiedo uno stabilimento che non c'è, errore
+    2. quando cancello uno stabilimento che già non esiste, errore
+    3.
+
+
+     */
+
+
+
 
 }
