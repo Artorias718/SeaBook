@@ -27,7 +27,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
                 .formLogin().disable()
                 .httpBasic().disable()
                 .antMatcher("/**").authorizeRequests()
-                .antMatchers("/api/v1/stabilimenti/**","/oauth/token")
+                //.antMatchers("/api/v1/stabilimenti/**","/oauth/token")
+                //scommentare riga sotto per rimuovere oauth
+                .antMatchers("/api/v1/**")
                 .permitAll()
                 .anyRequest().authenticated()
                 .and()

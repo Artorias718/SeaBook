@@ -47,12 +47,6 @@ public class StabilimentoRepositoryIntegrationTest {
         assertThat(found.get().getGpid()).isEqualTo(s1.getGpid());
         assertThat(found.get().getRating()).isEqualTo(s1.getRating());
 
-
-
-
-
-
-        //Fare stabilimento completo
     }
 
 

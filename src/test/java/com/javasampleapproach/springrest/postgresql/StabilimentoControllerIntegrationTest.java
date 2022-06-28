@@ -48,10 +48,10 @@ public class StabilimentoControllerIntegrationTest {
 
         Stabilimento s2 = new Stabilimento("Baia Nera");
 
-        List<Stabilimento> allEmployees = Arrays.asList(s1,s2);
+        List<Stabilimento> allStabs = Arrays.asList(s1,s2);
 
 
-        given(service.getStabilimenti()).willReturn(allEmployees);
+        given(service.getStabilimenti()).willReturn(allStabs);
 
         mvc.perform(get("/api/v1/stabilimenti")
                 .contentType(MediaType.APPLICATION_JSON))

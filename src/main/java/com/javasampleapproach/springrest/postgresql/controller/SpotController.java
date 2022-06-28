@@ -3,6 +3,9 @@ package com.javasampleapproach.springrest.postgresql.controller;
 import com.javasampleapproach.springrest.postgresql.model.*;
 import com.javasampleapproach.springrest.postgresql.repo.SpotRepository;
 import com.javasampleapproach.springrest.postgresql.repo.StabilimentoRepository;
+import com.javasampleapproach.springrest.postgresql.services.SpotService;
+import com.javasampleapproach.springrest.postgresql.services.StabilimentoService;
+import lombok.RequiredArgsConstructor;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -22,14 +25,68 @@ import java.util.*;
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/v1")
+@RequiredArgsConstructor
 public class SpotController {
 
     @Autowired
     SpotRepository repository;
+
     @Autowired
     StabilimentoRepository stab_repository;
 
+    private final SpotService spotService;
+
     static final String queueName = "spring-boot";
+
+    @GetMapping("/stabilimenti/{sid}/lista_Posti")
+    public ResponseEntity<List<Spot>> getAllSpots(@PathVariable long sid) {
+
+        return new ResponseEntity<>(spotService.getAllSpots(sid), HttpStatus.OK);
+    }
+    
+    @GetMapping("/spots/{pid}")
+    public ResponseEntity<Optional<Spot>> getSpot(@PathVariable long pid){
+
+        return new ResponseEntity<>(spotService.getSpot(pid), HttpStatus.OK);
+    }
+
+    @PostMapping("/stabilimenti/{sid}/create_spot")
+    public ResponseEntity<Spot> postSpotInStabilimento(@PathVariable long sid, @RequestBody Spot spot){
+
+        return new ResponseEntity<>(spotService.createSpot(sid, spot), HttpStatus.CREATED);
+    }
+
+    @Transactional
+    @DeleteMapping("/stabilimenti/{sid}/delete_spots")
+    public ResponseEntity<String> deleteAllSpotsInStab(@PathVariable long sid) {
+
+        return new ResponseEntity<>(spotService.deleteAllSpotsInStab(sid), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/stabilimenti/{sid}/{pid}/delete")
+    public ResponseEntity<String> deleteSpot(@PathVariable long sid, @PathVariable long pid) {
+
+
+        return new ResponseEntity<>(spotService.deleteSpot(pid), HttpStatus.OK);
+
+    }
+
+    @PutMapping("/stabilimenti/{id}/{sid}/put")
+    public ResponseEntity<Spot> updateSpot(@PathVariable("sid") long id, @RequestBody Spot spot) {
+
+        Optional<Spot> spotData = spotService.getSpot(id);
+
+        if (spotData.isPresent()) {
+            Spot _spot = spotData.get();
+            _spot.IsBooked(spot.IsBooked());
+            _spot.setPrice(spot.getPrice());
+            _spot.setStabId(spot.getStabId());
+            return new ResponseEntity<>(spotService.createSpot(null,_spot), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
 
 //    TODO(2) inserire nella request degli spot la data per
 //     poter impostare i posti disponibili
@@ -63,9 +120,6 @@ public class SpotController {
 
         return posti;
     }
-
-    // entry point per test add data alla lista di prenotazioni
-    // questo sucedera' tramite rabbitmq
     @PostMapping("/spot/{id}/prenota")
     public ResponseEntity<Spot> postSpotSetBookedDate(@PathVariable long id, @RequestBody Date dataPrenotazione) {
         Optional<Spot> spot = repository.findById(id);
@@ -85,60 +139,6 @@ public class SpotController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-    }
-
-
-    @PostMapping("/stabilimenti/{sid}/create_spot")
-    public Spot postSpotInStabilimento(@PathVariable long sid, @RequestBody Spot spot){
-
-        //TODO verificare se funziona dopo aver risolto con il db
-        Spot newspot = repository.save(new Spot(sid, spot.getPrice()));
-        Optional<Stabilimento> stab = stab_repository.findById(sid);
-
-        if (stab.isPresent()) {
-            Stabilimento s = stab.get();
-            s.increaseCapacity();
-            stab_repository.save(s);
-        }
-
-        return newspot;
-    }
-
-    @Transactional
-    @DeleteMapping("/stabilimenti/{sid}/delete_spots")
-    public ResponseEntity<String> deleteAllSpotsInStab(@PathVariable long sid) {
-
-        repository.deleteAllBySid(sid);
-
-        return new ResponseEntity<>("All spots in this stab have been deleted!", HttpStatus.OK);
-
-        //TODO Decrementare il numero posti dello stabilimento
-    }
-
-    @DeleteMapping("/stabilimenti/{sid}/{pid}/delete")
-    public ResponseEntity<String> deleteSpot(@PathVariable long sid, @PathVariable long pid) {
-
-        repository.deleteById(pid);
-
-        return new ResponseEntity<>("The spot have been deleted!", HttpStatus.OK);
-
-        //TODO Decrementare il numero posti dello stabilimento
-    }
-
-    @PutMapping("/stabilimenti/{id}/{sid}/put")
-    public ResponseEntity<Spot> updateSpot(@PathVariable("sid") long id, @RequestBody Spot spot) {
-
-        Optional<Spot> spotData = repository.findById(id);
-
-        if (spotData.isPresent()) {
-            Spot _spot = spotData.get();
-            _spot.IsBooked(spot.IsBooked());
-            _spot.setPrice(spot.getPrice());
-            _spot.setStabId(spot.getStabId());
-            return new ResponseEntity<>(repository.save(_spot), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
     }
 
     // TODO(3) il messaggio dev'essere del tipo data e lista di posti
