@@ -36,21 +36,24 @@ public class Utils {
             return mapper.writeValueAsBytes(object);
         }
 
-    public static Date extractAndFormatDate(JSONObject obj, String mode) throws JSONException {
+    public static Date extractAndFormatDate(String date, String mode){
 
-        String dataPrenotMsg = obj.getString("dataPrenotazione");
 
         SimpleDateFormat sdf3;
 
         if(Objects.equals(mode, "booking")) {
-            sdf3 = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH);}
-        else{
+            sdf3 = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH);
+        }
+        else if(Objects.equals(mode, "debooking")){
             sdf3 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.s", Locale.ENGLISH);
+        }
+        else{
+            sdf3 = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
         }
 
         Date newDate = null;
         try{
-            newDate = sdf3.parse(dataPrenotMsg);
+            newDate = sdf3.parse(date);
 
         }catch (Exception e){ e.printStackTrace(); }
 

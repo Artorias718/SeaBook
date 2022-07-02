@@ -6,23 +6,16 @@ import com.javasampleapproach.springrest.postgresql.repo.StabilimentoRepository;
 import com.javasampleapproach.springrest.postgresql.services.SpotService;
 import com.javasampleapproach.springrest.postgresql.services.StabilimentoService;
 import lombok.RequiredArgsConstructor;
-import org.json.JSONArray;
+
 import org.json.JSONException;
-import org.json.JSONObject;
-import org.springframework.amqp.rabbit.annotation.RabbitListener;
-import org.springframework.beans.BeanUtils;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
-
-import static com.javasampleapproach.springrest.postgresql.Utils.Utils.extractAndFormatDate;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
@@ -89,59 +82,10 @@ public class SpotController {
         }
     }
 
-
-//    TODO(2) inserire nella request degli spot la data per
-//     poter impostare i posti disponibili
     @GetMapping("/stabilimenti/{sid}/lista_Posti/{selectedDate}")
-    public List<Spot> getAllSpots(@PathVariable long sid, @PathVariable String selectedDate) {
+    public ResponseEntity<List<Spot>> getAllSpotsFlagged(@PathVariable long sid, @PathVariable String selectedDate) throws JSONException {
 
-        //questa mi servirà da altre parti per accedere al singolo stabilimento
-        //Stabilimento x = repository.findById(id);
-
-        System.out.println("\n\n\n\n\n" + selectedDate);
-
-        String string = "January 2, 2010";
-        DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-        Date date = null;
-        try {
-            date = format.parse(selectedDate);
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
-        }
-        System.out.println(date);
-
-        List<Spot> posti = new ArrayList<>();
-        repository.findAllBySid(sid).forEach(posti::add);
-
-        for (Spot s: posti) {
-            List<Date> datesList = s.getDatePrenotate();
-            if (datesList.contains(date)) {
-                s.IsBooked(true);
-            }
-        }
-
-        return posti;
+        return new ResponseEntity<>(spotService.getAllSpotsFlagged(sid, selectedDate), HttpStatus.OK);
     }
-    @PostMapping("/spot/{id}/prenota")
-    public ResponseEntity<Spot> postSpotSetBookedDate(@PathVariable long id, @RequestBody Date dataPrenotazione) {
-        Optional<Spot> spot = repository.findById(id);
-
-        System.out.println("\n\n\n\n\nData dal client: " + dataPrenotazione);
-
-        if (spot.isPresent()) {
-            Spot _spot = spot.get();
-            List<Date> datePrenotate = _spot.getDatePrenotate();
-            datePrenotate.add(dataPrenotazione);
-            System.out.println("\n\n\n\n\ndate prenotate: " + _spot.getDatePrenotate());
-            _spot.setDatePrenotate(datePrenotate);
-
-            return new ResponseEntity<>(repository.save(_spot), HttpStatus.OK);
-        }
-        else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-    }
-
 
 }

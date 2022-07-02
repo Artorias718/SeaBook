@@ -1,5 +1,6 @@
 package com.javasampleapproach.springrest.postgresql.services;
 
+import com.javasampleapproach.springrest.postgresql.Utils.Utils;
 import com.javasampleapproach.springrest.postgresql.model.Spot;
 import com.javasampleapproach.springrest.postgresql.model.Stabilimento;
 import com.javasampleapproach.springrest.postgresql.repo.SpotRepository;
@@ -78,6 +79,20 @@ public class SpotService {
         return posti;
     }
 
+    public List<Spot> getAllSpotsFlagged(long sid, String selectedDate) throws JSONException {
+
+        List<Spot> posti = new ArrayList<>(spotRepository.findAllBySid(sid));
+
+        for (Spot s : posti) {
+            List<Date> datesList = s.getDatePrenotate();
+            if (datesList.contains(Utils.extractAndFormatDate(selectedDate, ""))) {
+                s.IsBooked(true);
+            }
+        }
+
+        return posti;
+    }
+
     @Transactional
     @RabbitListener(queues = "bookingQueue")
     public void listener(String message) throws JSONException {
@@ -85,6 +100,7 @@ public class SpotService {
         JSONObject obj = new JSONObject(message);
 
         JSONArray listaPosti = obj.getJSONArray("listaPosti");
+        String dataPrenotMsg = obj.getString("dataPrenotazione");
 
         for (int i = 0; i < listaPosti.length(); i++) {
 
@@ -93,7 +109,7 @@ public class SpotService {
             if (spot.isPresent()) {
                 Spot _spot = spot.get();
                 List<Date> datePrenotate = _spot.getDatePrenotate();
-                datePrenotate.add(extractAndFormatDate(obj,"booking"));
+                datePrenotate.add(extractAndFormatDate(dataPrenotMsg,"booking"));
                 _spot.setDatePrenotate(datePrenotate);
 
                 spotRepository.save(_spot);
@@ -108,7 +124,7 @@ public class SpotService {
         JSONObject obj = new JSONObject(message);
 
         JSONArray listaPosti = obj.getJSONArray("listaPosti");
-
+        String dataPrenotMsg = obj.getString("dataPrenotazione");
 
         for (int i = 0; i < listaPosti.length(); i++) {
 
@@ -117,16 +133,13 @@ public class SpotService {
             if (spot.isPresent()) {
                 Spot _spot = spot.get();
                 List<Date> datePrenotate = _spot.getDatePrenotate();
-                datePrenotate.remove(extractAndFormatDate(obj,"debooking"));
+                datePrenotate.remove(extractAndFormatDate(dataPrenotMsg,"debooking"));
                 _spot.setDatePrenotate(datePrenotate);
                 spotRepository.save(_spot);
             }
         }
 
     }
-
-
-
 
 
 }
