@@ -11,7 +11,7 @@ import java.util.List;
 @Table(name = "spot")
 public class Spot {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "spotId", nullable = false)
     private Long id;
 

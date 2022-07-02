@@ -43,9 +43,12 @@ public class StabilimentoService {
 
     public Stabilimento getStabilimento(Long id) throws JSONException {
 
+        Stabilimento stab = repository.findById(id).orElseThrow(() -> new EntityNotFoundException(
+                "Stabilimento non presente"));
 
         Utils.updateRating(id, repository, proxy);
-        return repository.findById(id).orElseThrow(EntityNotFoundException::new);
+
+        return stab;
     }
 
     public List<Stabilimento> getStabilimenti(){

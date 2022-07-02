@@ -22,6 +22,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import static com.javasampleapproach.springrest.postgresql.Utils.Utils.extractAndFormatDate;
+
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/v1")
@@ -36,14 +38,14 @@ public class SpotController {
 
     private final SpotService spotService;
 
-    static final String queueName = "spring-boot";
+    private final StabilimentoService stabService;
 
     @GetMapping("/stabilimenti/{sid}/lista_Posti")
     public ResponseEntity<List<Spot>> getAllSpots(@PathVariable long sid) {
 
         return new ResponseEntity<>(spotService.getAllSpots(sid), HttpStatus.OK);
     }
-    
+
     @GetMapping("/spots/{pid}")
     public ResponseEntity<Optional<Spot>> getSpot(@PathVariable long pid){
 
@@ -71,7 +73,7 @@ public class SpotController {
 
     }
 
-    @PutMapping("/stabilimenti/{id}/{sid}/put")
+    @PutMapping("/stabilimenti/{sid}/{pid}/put")
     public ResponseEntity<Spot> updateSpot(@PathVariable("sid") long id, @RequestBody Spot spot) {
 
         Optional<Spot> spotData = spotService.getSpot(id);
@@ -141,122 +143,5 @@ public class SpotController {
 
     }
 
-    // TODO(3) il messaggio dev'essere del tipo data e lista di posti
-    @Transactional
-    @RabbitListener(queues = "bookingQueue")
-    public void listener(String message) throws JSONException, ParseException {
 
-        // BookMessage bookMessage = (BookMessage) message;
-        System.out.println("\n\n\n\n\n\n\n\n" + message + "\n");
-        JSONObject obj = new JSONObject(message);
-
-        String dataPrenotMsg = obj.getString("dataPrenotazione");
-        System.out.println(dataPrenotMsg + "\n\n\n");
-
-        SimpleDateFormat sdf3 = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH);
-
-        Date d1 = null;
-        try{
-            d1 = sdf3.parse(dataPrenotMsg);
-
-        }catch (Exception e){ e.printStackTrace(); }
-
-
-        System.out.println("check..." + d1);
-
-        JSONArray listaPosti = obj.getJSONArray("listaPosti");
-        System.out.println(listaPosti + "\n\n\n\n");
-
-        for (int i = 0; i < listaPosti.length(); i++) {
-            Long id = listaPosti.getLong(i);
-            Optional<Spot> spot = repository.findById(id);
-
-            if (spot.isPresent()) {
-                Spot _spot = spot.get();
-                System.out.println("\nSpot: " + _spot.getId());
-                List<Date> datePrenotate = _spot.getDatePrenotate();
-                datePrenotate.add(d1);
-                System.out.println("\ndate prenotate: " + _spot.getDatePrenotate() + "\n\n\n\n\n");
-                _spot.setDatePrenotate(datePrenotate);
-
-                repository.save(_spot);
-            }
-        }
-
-//        for (Integer i : listaPosti) {
-//            Long id = Long.valueOf(i);
-//            Optional<Spot> spot = repository.findById(id);
-//
-//                if (spot.isPresent()) {
-//                Spot _spot = spot.get();
-//                System.out.println("\n\n\n\n\nSpot: " + _spot.getId() + "\n\n\n\n\n");
-//                List<Date> datePrenotate = _spot.getDatePrenotate();
-////                datePrenotate.add(dateWithoutTime);
-//                System.out.println("\n\n\n\n\ndate prenotate: " + _spot.getDatePrenotate());
-//                _spot.setDatePrenotate(datePrenotate);
-//
-//                repository.save(_spot);
-//            }
-//        }
-
-        //        Calendar rightNow = Calendar.getInstance();
-//        rightNow.set(Calendar.HOUR_OF_DAY, 0);
-//        rightNow.set(Calendar.MINUTE, 0);
-//        rightNow.set(Calendar.SECOND, 0);
-//        rightNow.set(Calendar.MILLISECOND, 0);
-//        Date dateWithoutTime = rightNow.getTime();
-//        System.out.println("\n\n\n\n\n\n\n\n" + dateWithoutTime + "\n\n\n\n\n\n\n\n");
-//
-//        for (Integer i : message) {
-//            Long id = Long.valueOf(i);
-//            Optional<Spot> spot = repository.findById(id);
-//
-//            if (spot.isPresent()) {
-//                Spot _spot = spot.get();
-//                System.out.println("\n\n\n\n\nSpot: " + _spot.getId() + "\n\n\n\n\n");
-//                List<Date> datePrenotate = _spot.getDatePrenotate();
-//                datePrenotate.add(dateWithoutTime);
-//                System.out.println("\n\n\n\n\ndate prenotate: " + _spot.getDatePrenotate());
-//                _spot.setDatePrenotate(datePrenotate);
-//
-//                repository.save(_spot);
-//            }
-//        }
-    }
-//    public void listener(List<Integer> message) {
-//
-//        for (Integer i : message) {
-//            Optional<Spot> old_spot = repository.findById(Long.valueOf(i));
-//
-//            if (old_spot.isPresent()) {
-//                Spot new_spot = old_spot.get();
-//                new_spot.IsBooked(true);
-//                repository.save(new_spot);
-//            }
-//
-//        }
-//
-//
-//    }
-
-    @RabbitListener(queues = "debookingQueue")
-    public void listener2(List<Integer> message) {
-
-
-        for (Integer i : message) {
-
-            Optional<Spot> old_spot = repository.findById(Long.valueOf(i));
-
-            if (old_spot.isPresent()) {
-                Spot new_spot = old_spot.get();
-                new_spot.IsBooked(false);
-                repository.save(new_spot);
-            }
-
-
-        }
-
-
-    }
-
-    }
+}

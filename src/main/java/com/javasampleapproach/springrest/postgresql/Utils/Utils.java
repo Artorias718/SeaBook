@@ -9,6 +9,10 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+import java.util.Objects;
 import java.util.Optional;
 
 public class Utils {
@@ -31,5 +35,29 @@ public class Utils {
             mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
             return mapper.writeValueAsBytes(object);
         }
+
+    public static Date extractAndFormatDate(JSONObject obj, String mode) throws JSONException {
+
+        String dataPrenotMsg = obj.getString("dataPrenotazione");
+
+        SimpleDateFormat sdf3;
+
+        if(Objects.equals(mode, "booking")) {
+            sdf3 = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH);}
+        else{
+            sdf3 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.s", Locale.ENGLISH);
+        }
+
+        Date newDate = null;
+        try{
+            newDate = sdf3.parse(dataPrenotMsg);
+
+        }catch (Exception e){ e.printStackTrace(); }
+
+        return newDate;
+
+
+
+    }
 
 }

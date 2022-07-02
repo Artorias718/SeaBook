@@ -50,7 +50,6 @@ public class StabilimentoControllerIntegrationTest {
 
         List<Stabilimento> allStabs = Arrays.asList(s1,s2);
 
-
         given(service.getStabilimenti()).willReturn(allStabs);
 
         mvc.perform(get("/api/v1/stabilimenti")

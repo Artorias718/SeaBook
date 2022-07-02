@@ -95,7 +95,7 @@ public class StabilimentoController {
         }
     }
 
-    //TODO spostare logica di business in @Service, solamente se da tenere
+    /*
     @PutMapping("/stabilimenti/{id}/putCapacity/{capacity}")
     public ResponseEntity<Stabilimento> updateStabilimento(@PathVariable("id") long id, @PathVariable ("capacity") int capacity) {
 
@@ -108,6 +108,6 @@ public class StabilimentoController {
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-    }
+    }*/
 
 }
