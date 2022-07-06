@@ -79,7 +79,7 @@ public class SpotService {
         return posti;
     }
 
-    public List<Spot> getAllSpotsFlagged(long sid, String selectedDate) throws JSONException {
+    public List<Spot> getAllSpotsFlagged(long sid, String selectedDate) {
 
         List<Spot> posti = new ArrayList<>(spotRepository.findAllBySid(sid));
 
@@ -91,6 +91,11 @@ public class SpotService {
         }
 
         return posti;
+    }
+
+    public Spot saveSpot(Spot spot) {
+
+        return spotRepository.save(spot);
     }
 
     @Transactional

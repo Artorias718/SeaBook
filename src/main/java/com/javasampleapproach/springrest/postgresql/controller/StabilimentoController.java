@@ -40,7 +40,7 @@ public class StabilimentoController {
     }
 
     @GetMapping("/stabilimenti")
-    public ResponseEntity<List<Stabilimento>> getAllStabilimenti() throws JSONException {
+    public ResponseEntity<List<Stabilimento>> getAllStabilimenti() {
 
         return new ResponseEntity<>(stabilimentoService.getStabilimenti(), HttpStatus.OK);
     }
@@ -65,13 +65,13 @@ public class StabilimentoController {
     }
 
     @DeleteMapping("/stabilimenti/{id}/delete")
-    public ResponseEntity<String> deleteStabilimento(@PathVariable("id") long id) throws JSONException {
+    public ResponseEntity<String> deleteStabilimento(@PathVariable("id") long id) {
 
         return new ResponseEntity<>(stabilimentoService.deleteStabilimento(id), HttpStatus.OK);
     }
 
     @DeleteMapping("/stabilimenti/delete")
-    public ResponseEntity<String> deleteAllStabilimenti() throws JSONException {
+    public ResponseEntity<String> deleteAllStabilimenti() {
 
         return new ResponseEntity<>(stabilimentoService.deleteAllStabilimenti(), HttpStatus.OK);
     }
@@ -89,25 +89,10 @@ public class StabilimentoController {
             _stab.setPhoneNumber(stabilimento.getPhoneNumber());
             _stab.setGpid(stabilimento.getGpid());
             _stab.setRating(stabilimento.getRating());
-            return new ResponseEntity<>(stabilimentoService.createStabilimento(_stab), HttpStatus.OK);
+            return new ResponseEntity<>(stabilimentoService.saveStabilimento(_stab), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-
-    /*
-    @PutMapping("/stabilimenti/{id}/putCapacity/{capacity}")
-    public ResponseEntity<Stabilimento> updateStabilimento(@PathVariable("id") long id, @PathVariable ("capacity") int capacity) {
-
-        Optional<Stabilimento> stabData = repository.findById(id);
-
-        if (stabData.isPresent()) {
-            Stabilimento _stab = stabData.get();
-            _stab.setSpotsNumber(capacity);
-            return new ResponseEntity<>(repository.save(_stab), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }*/
 
 }

@@ -78,17 +78,22 @@ public class StabilimentoService {
         return newstab;
     }
 
-    public String deleteStabilimento(Long id) throws JSONException {
+    public String deleteStabilimento(Long id) {
 
         repository.deleteById(id);
 
         return "Stabilimento cancellato con successo!";
     }
 
-    public String deleteAllStabilimenti() throws JSONException {
+    public String deleteAllStabilimenti() {
 
         repository.deleteAll();
         return "Tutti gli stabilimenti sono stati cancellati con successo!";
+    }
+
+    public Stabilimento saveStabilimento(Stabilimento stabilimento) {
+
+        return repository.save(stabilimento);
     }
 
 }

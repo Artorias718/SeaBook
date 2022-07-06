@@ -4,7 +4,6 @@ import com.javasampleapproach.springrest.postgresql.model.*;
 import com.javasampleapproach.springrest.postgresql.repo.SpotRepository;
 import com.javasampleapproach.springrest.postgresql.repo.StabilimentoRepository;
 import com.javasampleapproach.springrest.postgresql.services.SpotService;
-import com.javasampleapproach.springrest.postgresql.services.StabilimentoService;
 import lombok.RequiredArgsConstructor;
 
 import org.json.JSONException;
@@ -30,8 +29,6 @@ public class SpotController {
     StabilimentoRepository stab_repository;
 
     private final SpotService spotService;
-
-    private final StabilimentoService stabService;
 
     @GetMapping("/stabilimenti/{sid}/lista_Posti")
     public ResponseEntity<List<Spot>> getAllSpots(@PathVariable long sid) {
@@ -76,7 +73,7 @@ public class SpotController {
             _spot.IsBooked(spot.IsBooked());
             _spot.setPrice(spot.getPrice());
             _spot.setStabId(spot.getStabId());
-            return new ResponseEntity<>(spotService.createSpot(null,_spot), HttpStatus.OK);
+            return new ResponseEntity<>(spotService.saveSpot(_spot), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
