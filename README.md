@@ -1,4 +1,17 @@
-# SeaBook
+# SeaBook  :palm_tree:
+
+Services
+
+| Name        | Port          | Description  |
+| ------------- |:-------------:| -----:|
+| discovery| 8761 | Eureka server per la registrazione dei servizi |
+| app| 8080| Microservizio per gestire stabilimenti e posti | 
+| bookingService | 7500      |    Microservizio per gestire le prenotazioni |
+| rabbitMQ | 5672      |    Message-oriented middleware  |
+| frontend | 3000      |    React webapp |
+| apiGateway | 9000      |    Zuul poxy per il routing |
+
+Link alla documentazione delle APIs: https://documenter.getpostman.com/view/18547732/UzBmM7GS
 
 Se non già installato, installre maven wrapper plugin, posizionandosi nella root del progetto
 
