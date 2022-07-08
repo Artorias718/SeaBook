@@ -28,7 +28,8 @@ spec:
         - env:
             - name: eureka.client.serviceUrl.defaultZone
               value: http://discovery:8761/eureka/
-          image: artorias94/apigateway
+          image: apigateway
+          imagePullPolicy: Never                                            
           name: apigateway
           ports:
             - containerPort: 9000

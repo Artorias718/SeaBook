@@ -28,7 +28,8 @@ spec:
         - env:
             - name: eureka.client.serviceUrl.defaultZone
               value: http://discovery:8761/eureka/
-          image: artorias94/appbootrest
+          image: appbootrest
+          imagePullPolicy: Never                                            
           name: appbootrest
           ports:
             - containerPort: 8080
