@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.javasampleapproach.springrest.postgresql.model.Customer;
 import com.javasampleapproach.springrest.postgresql.repo.CustomerRepository;
 
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:4000"})
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1")
