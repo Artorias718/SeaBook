@@ -38,9 +38,6 @@ public class SpotService {
         Stabilimento stab = stabRepository.findById(sid).orElseThrow(() -> new EntityNotFoundException(
                 "Stabilimeto con id " + sid + " inesistente!"));
 
-        stab.increaseCapacity();
-        stabRepository.save(stab);
-
         return newspot;
 
     }
